@@ -237,7 +237,7 @@ $(document).ready(function(){
     
     
 
-    plot2d = new RealtimePlot1D($("#plot-container"), deviceData, 30);
+    plot2d = new RealtimePlot1D($("#plot-container"), deviceData, 20);
     //plot2d.addDataIndex(22, 0xFF0000);
     //plot2d.addDataIndex(31, 0x0000FF);
     //plot2d.addDataIndex(32, 0x00FF00);
