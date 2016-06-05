@@ -267,9 +267,8 @@ $(document).ready(function(){
         $("#data" + i).css("text-align", "right");
         $("#data_count").css("text-align", "right");
     }
-    $("#data13").click();
-    $("#data14").click();
-    $("#data15").click();
+    $("#data10").click();
+    $("#data11").click();
     
     requestAnimationFrame(pageRender);
 });
