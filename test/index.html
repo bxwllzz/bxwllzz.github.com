@@ -20,6 +20,7 @@
 	<script type="text/javascript">
 	//192.168.123.63 地址
 	   var ws = new WebSocket("ws://192.168.123.63");
+	   var time=0;
 	   ws.onopen = function()
 	   {
 	        // Web Socket is connected, send data using send()
@@ -34,8 +35,7 @@
 	   { 
 	        // websocket is closed.
 	     	console.log("Connection is closed..."); 
-	    };
-	  }
+	   };
 	  function Stop()
 	  {
 	  	if(ws.readyState==1)
@@ -43,29 +43,27 @@
 			ws.send("left=0");
 			ws.send("right=0");		
 		}
-	  }
-	  	var time=0;
-	 	function orientationHandler(event) {
+	  };
+	 function orientationHandler(event) {
 			document.getElementById("alpha").innerHTML = event.alpha;
 			document.getElementById("beta").innerHTML = event.beta;
 			document.getElementById("gamma").innerHTML = event.gamma;
-			if(ws.readyState==1&&time=0)
+			if(ws.readyState==1&&time==0)
 			{
 				time++;
 				ws.send("left=20");
 				ws.send("right=20");		
 			}
-		}
+	}
 
-		if (window.DeviceOrientationEvent) 
-		{
-			window.addEventListener("deviceorientation", orientationHandler, false);
-		} 
-		else
-		{
-			document.body.innerHTML = "What user agent u r using???";
-		};
-	</script>
-	</body>
-
-	</html>
+	if (window.DeviceOrientationEvent) 
+	{
+		window.addEventListener("deviceorientation", orientationHandler, false);
+	} 
+	else
+	{
+		document.body.innerHTML = "What user agent u r using???";
+	};
+</script>
+</body>
+</html>
