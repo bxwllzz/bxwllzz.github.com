@@ -2,6 +2,7 @@ var websocket = null;
 var wsTimeout = null;
 var wsTryOpen = false;
 
+var Address="192.168.123.65";
 var floatData = new Float32Array();
 var hasNewData = false;
 var refreshInterval = null;
@@ -21,6 +22,26 @@ window.onload = function(){
     {
         console.log(1111);
     };
+    //绑定4个按键
+    $("button")[0].click(function() {
+        wsTryOpen = true;
+        wsOnOpening();
+        refreshInterval = setTimeout(dataRefreshHandler, 1);
+    });
+    $("button")[1].click(function() {
+        clearTimeout(refreshInterval);
+        wsTryOpen = false;
+        wsOnClosing();
+    });
+    $("button")[3].click(function() {
+         websocket.send("left=50");
+         websocket.send("right=50");
+    });
+    $("button")[3].click(function() {
+        websocket.send("left=0");
+        websocket.send("right=0");
+    });
+
 }
 function orientationHandler(event) {
     document.getElementById("alpha").innerHTML = event.alpha;
@@ -31,11 +52,11 @@ function setWsTimeout() {
     clearWsTimeout();
     if (websocket != null) {	
         if (websocket.readyState == websocket.CONNECTING) {
-            wsTimeout = setTimeout("wsOnOpenTimeout()", parseInt($("#openTimeout")[0].value) * 1000);
+            wsTimeout = setTimeout("wsOnOpenTimeout()", 2 * 1000);
         } else if (websocket.readyState == websocket.OPEN) {
             // wsTimeout = setTimeout("wsOnNodataTimeout()", parseInt($("#nodataTimeout")[0].value) * 1000);
         } else if (websocket.readyState == websocket.CLOSING) {
-            wsTimeout = setTimeout("wsOnCloseTimeout()", parseInt($("#closeTimeout")[0].value) * 1000);
+            wsTimeout = setTimeout("wsOnCloseTimeout()", 2 * 1000);
         }
     }
 }
@@ -52,21 +73,6 @@ function wsOnOpen(evt) {
     console.log("已连接");
     $("#status").html("已连接");
     setWsTimeout();
-}
-
-function pageRender() {
-    stats.begin();
-    if (deviceData.length > 0) {
-        var data = deviceData.get(-1); 
-        for (var i = 0; i < deviceData.frameLength; i++) {
-            $("#data" + i).html(data[i].toFixed(4));
-        }
-        $("#data_count").html(deviceData.length.toString());
-        plot2d.render();
-        plot2d2.render();
-    }
-    stats.end();
-    requestAnimationFrame(pageRender);
 }
 
 var isFinished = true;
@@ -95,9 +101,11 @@ function wsOnMessage(evt) {
     }
     setWsTimeout();
 }
+
 function wsOnError(evt) {
     console.log("发生错误");
 }
+
 function wsOnClose(evt) {
     clearWsTimeout();
     console.log("已断开");
@@ -106,10 +114,11 @@ function wsOnClose(evt) {
     if (wsTryOpen) {
         wsOnOpening();
     } else {
-        $("#wsServer").prop('disabled', false);
+       /* $("#wsServer").prop('disabled', false);
         $("#openTimeout").prop('disabled', false);
         $("#closeTimeout").prop('disabled', false);
         $("#nodataTimeout").prop('disabled', false);
+        */
     }
 }
 
@@ -117,7 +126,7 @@ function wsOnOpening() {
     clearWsTimeout();
     console.log("连接中");
     $("#status").html("连接中");
-    websocket = new WebSocket("ws://" + $("#wsServer")[0].value); 
+    websocket = new WebSocket("ws://"+Address); 
     websocket.onopen = wsOnOpen;
     websocket.onmessage = wsOnMessage;
     websocket.onerror = wsOnError;
@@ -156,15 +165,15 @@ function wsOnCloseTimeout() {
         if (wsTryOpen) {
             wsOnOpening();
         } else {
-            $("#wsServer").prop('disabled', false);
+          /*  $("#wsServer").prop('disabled', false);
             $("#openTimeout").prop('disabled', false);
             $("#closeTimeout").prop('disabled', false);
-            $("#nodataTimeout").prop('disabled', false);
+            $("#nodataTimeout").prop('disabled', false);*/
         }
     }
 }
 
-function dataRefreshHandler() {
+/*function dataRefreshHandler() {
     if (hasNewData) {
         hasNewData = false;
     }
@@ -182,6 +191,7 @@ function setRemote(k, v) {
 
 var plot;
 var plot2d;
+*/
 /*
 $(document).ready(function(){
     // 初始化数据存储
