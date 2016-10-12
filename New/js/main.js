@@ -192,7 +192,22 @@ $(document).ready(function(){
       $('[type="checkbox"]').bootstrapSwitch();
     });
     //增加事件
-    $('#mySwitch').on('switch-change', function (e, data) {
+    $('[type="checkbox"]').on('switchChange.bootstrapSwitch', function (e, data) {
+     
+        if(data==false)
+        {
+            if (window.DeviceOrientationEvent) {  
+                 window.removeEventListener("deviceorientation", orientationHandler, false); 
+            }
+            console.log("close");
+        }
+        else
+        {
+            if (window.DeviceOrientationEvent) {  
+                 window.addEventListener("deviceorientation", orientationHandler, false); 
+            }
+            console.log("open");
+        }
 
     });
     // 初始化数据存储
@@ -235,10 +250,7 @@ $(document).ready(function(){
             setRemote("speed", 0);
         }
     });
-    
-    if (window.DeviceOrientationEvent) {  
-        window.addEventListener("deviceorientation", orientationHandler, false);  
-    }
+
     
     stats = new Stats();
     stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
