@@ -199,6 +199,12 @@ $(document).ready(function(){
             if (window.DeviceOrientationEvent) {  
                  window.removeEventListener("deviceorientation", orientationHandler, false); 
             }
+            //同时关闭
+            if(websocket != null)
+            {
+                websocket.send('speed=0');
+                websocket.send('speeddiff=0');
+            }
             console.log("close");
         }
         else
