@@ -195,9 +195,9 @@ $(document).ready(function(){
         } else if (event.keyCode == 39) { // 右
             setRemote("speeddiff", -0.4);
         } else if (event.keyCode == 38) { // 上
-            setRemote("speed", 0.2);
+            setRemote("speed", 0.3);
         } else if (event.keyCode == 40) { // 下
-            setRemote("speed", -0.2);
+            setRemote("speed", -0.3);
         }
     });
     $(document).keyup(function (event) {
@@ -212,19 +212,19 @@ $(document).ready(function(){
             var z = 10;
             if (event.beta < -z) {
                 //setRemote("speed", (event.beta - -z) / -20);
-                setRemote("speed", 0.5);
+                setRemote("speed", 0.3);
             } else if (event.beta > z) {
                 //setRemote("speed", (event.beta - z) / -20);
-                setRemote("speed", -0.5);
+                setRemote("speed", -0.3);
             } else if (event.beta < z && event.beta > -z) {
                 setRemote("speed", 0);
             }
             if (event.gamma < -z) {
                 //setRemote("speeddiff", (event.gamma - -z) / -10);
-                setRemote("speeddiff", 1);
+                setRemote("speeddiff", 0.4);
             } else if (event.gamma > z) {
                 //setRemote("speeddiff", (event.gamma - z) / -10);
-                setRemote("speeddiff", -1);
+                setRemote("speeddiff", -0.4);
             } else if (event.gamma < z && event.gamma > -z) {
                 setRemote("speeddiff", 0);
             }
