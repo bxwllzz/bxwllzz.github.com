@@ -191,13 +191,13 @@ $(document).ready(function(){
     });
     $(document).keydown(function (event) {
         if (event.keyCode == 37) { // 左
-            setRemote("speeddiff", 1);
+            setRemote("speeddiff", 0.4);
         } else if (event.keyCode == 39) { // 右
-            setRemote("speeddiff", -1);
+            setRemote("speeddiff", -0.4);
         } else if (event.keyCode == 38) { // 上
-            setRemote("speed", 0.5);
+            setRemote("speed", 0.2);
         } else if (event.keyCode == 40) { // 下
-            setRemote("speed", -0.5);
+            setRemote("speed", -0.2);
         }
     });
     $(document).keyup(function (event) {
