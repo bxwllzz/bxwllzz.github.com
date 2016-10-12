@@ -163,10 +163,38 @@ function setRemote(k, v) {
         $("#" + k)[0].value = v;
     }
 }
-
+//定义角度处理函数
+function orientationHandler(event) {  
+    var z = 10;
+    if (event.beta < -z) {
+        //setRemote("speed", (event.beta - -z) / -20);
+        setRemote("speed", 0.3);
+    } else if (event.beta > z) {
+        //setRemote("speed", (event.beta - z) / -20);
+        setRemote("speed", -0.3);
+    } else if (event.beta < z && event.beta > -z) {
+        setRemote("speed", 0);
+    }
+    if (event.gamma < -z) {
+        //setRemote("speeddiff", (event.gamma - -z) / -10);
+        setRemote("speeddiff", 0.4);
+    } else if (event.gamma > z) {
+        //setRemote("speeddiff", (event.gamma - z) / -10);
+        setRemote("speeddiff", -0.4);
+    } else if (event.gamma < z && event.gamma > -z) {
+        setRemote("speeddiff", 0);
+    }
+}
 var plot;
 var plot2d;
 $(document).ready(function(){
+    $(function(argument) {
+      $('[type="checkbox"]').bootstrapSwitch();
+    });
+    //增加事件
+    $('#mySwitch').on('switch-change', function (e, data) {
+
+    });
     // 初始化数据存储
     deviceData = new DeviceData();
 
@@ -207,28 +235,9 @@ $(document).ready(function(){
             setRemote("speed", 0);
         }
     });
+    
     if (window.DeviceOrientationEvent) {  
-        window.addEventListener("deviceorientation", function orientationHandler(event) {  
-            var z = 10;
-            if (event.beta < -z) {
-                //setRemote("speed", (event.beta - -z) / -20);
-                setRemote("speed", 0.3);
-            } else if (event.beta > z) {
-                //setRemote("speed", (event.beta - z) / -20);
-                setRemote("speed", -0.3);
-            } else if (event.beta < z && event.beta > -z) {
-                setRemote("speed", 0);
-            }
-            if (event.gamma < -z) {
-                //setRemote("speeddiff", (event.gamma - -z) / -10);
-                setRemote("speeddiff", 0.4);
-            } else if (event.gamma > z) {
-                //setRemote("speeddiff", (event.gamma - z) / -10);
-                setRemote("speeddiff", -0.4);
-            } else if (event.gamma < z && event.gamma > -z) {
-                setRemote("speeddiff", 0);
-            }
-        }, false);  
+        window.addEventListener("deviceorientation", orientationHandler, false);  
     }
     
     stats = new Stats();

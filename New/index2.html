@@ -7,6 +7,7 @@
     <title>上位机</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-switch.min.css" rel="stylesheet">
   </head>
   <body>
   <!-- //登入输出 -->
@@ -49,7 +50,9 @@
     <button onclick="websocket.send('reset')" class="btn btn-info" >复位</button>
     <!-- <button onclick="deviceData.exportXLSX()" class="btn btn-info" >导出</button> -->
     </div>
-
+    <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-id-switch-size bootstrap-switch-animate bootstrap-switch-on bootstrap-switch-small">
+     <input type="checkbox" checked />
+    </div>
     <div id="alldata" class="table-responsive" style="display :none">
     <table border="1" width="100%"  class="table">
     <tr>
@@ -109,6 +112,7 @@
 
   <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
   <script src="js/main.js"></script>
+   <script src="js/chart3d.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/three.min.js"></script>
   <script src="js/FileSaver.min.js"></script>
@@ -116,5 +120,11 @@
   <script src="js/stats.min.js"></script>
   <script src="js/data.js"></script>
   <script src="js/chart3d.js"></script>
+  <script src="js/bootstrap-switch.min.js"></script>
+      <script>
+    $(function(argument) {
+      $('[type="checkbox"]').bootstrapSwitch();
+    })
+    </script>
   </body>
 </html>
