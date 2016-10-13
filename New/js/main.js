@@ -185,6 +185,79 @@ function orientationHandler(event) {
         setRemote("speeddiff", 0);
     }
 }
+function CalumniateNum(x,y){
+    var height=window.screen.height+0.1; //防止边界问题加+0.1
+    var Width=window.screen.width+0.1; //防止边界问题
+    var numx=3-parseInt((Width-x)/60);
+    var numy=2-parseInt((height-y)/60);
+    return  numx+3*numy
+}
+var targedSpeed=0.2;
+var targedSpeeddiffer=0.4;
+function Deal(num)
+{
+    switch(num)
+    {
+        case 1:
+            setRemote("speed", targedSpeed);
+            setRemote("speeddiff",targedSpeeddiffer);
+         break;
+         case 2:
+            setRemote("speed", targedSpeed);
+            setRemote("speeddiff",0);
+         break;
+          case 3:
+            setRemote("speed", targedSpeed);
+            setRemote("speeddiff",-targedSpeeddiffer);
+         break;
+          case 4:
+            setRemote("speed", 0);
+            setRemote("speeddiff",targedSpeeddiffer);
+         break;
+          case 5:
+            setRemote("speed", 0);
+            setRemote("speeddiff",0);
+         break;
+          case 6:
+            setRemote("speed", 0);
+            setRemote("speeddiff",-targedSpeeddiffer);
+         break;
+          case 7:
+            setRemote("speed", -targedSpeed);
+            setRemote("speeddiff",targedSpeeddiffer);
+         break;
+          case 8:
+            setRemote("speed", -targedSpeed);
+            setRemote("speeddiff",0);
+         break;
+          case 9:
+            setRemote("speed", -targedSpeed);
+            setRemote("speeddiff",-targedSpeeddiffer);
+         break;
+}
+}
+var currentnum;
+function touchmoving(event){
+    var tempNum=CalumniateNum(event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY);
+    if(currentnum!=tempNum)
+    {
+        currentnum=tempNum;
+        Deal(currentnum);
+        console.log(currentnum);
+    }
+}
+function touchStart(event){
+    currentnum=CalumniateNum(event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY);
+    Deal(currentnum);
+    console.log(currentnum);
+    $("#oprater").bind('touchmove',touchmoving);  //注册移动事件
+}
+function touchEnd()
+{
+     $("#oprater").unbind('touchmove',touchmoving);  //注册移动事件
+     Deal(5);  //速度清0
+    console.log(5);
+}
 var plot;
 var plot2d;
 $(document).ready(function(){
@@ -216,6 +289,10 @@ $(document).ready(function(){
         }
 
     });
+    //添加move事件
+    $("#oprater").bind('touchstart',touchStart);
+    $("#oprater").bind('touchend',touchEnd);
+
     // 初始化数据存储
     deviceData = new DeviceData();
 
