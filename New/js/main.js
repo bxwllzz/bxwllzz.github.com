@@ -243,6 +243,8 @@ function touchmoving(event){
     var tempNum=CalumniateNum(event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY);
     if(currentnum!=tempNum)
     {
+        $('#oprater span:nth-child('+currentnum+')').css('background-color','white')
+        $('#oprater span:nth-child('+tempNum+')').css('background-color','black')
         currentnum=tempNum;
         Deal(currentnum);
         console.log(currentnum);
@@ -250,6 +252,7 @@ function touchmoving(event){
 }
 function touchStart(event){
     currentnum=CalumniateNum(event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY);
+    $('#oprater span:nth-child('+currentnum+')').css('background-color','black')
     Deal(currentnum);
     console.log(currentnum);
     $("#oprater").bind('touchmove',touchmoving);  //注册移动事件
