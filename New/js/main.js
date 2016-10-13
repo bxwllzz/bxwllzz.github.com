@@ -186,10 +186,10 @@ function orientationHandler(event) {
     }
 }
 function CalumniateNum(x,y){
-    var height=document.body.clientHeight+0.1; //防止边界问题加+0.1
-    var Width=document.body.clientWidth+0.1; //防止边界问题
-    var numx=3-parseInt((Width-x)/60);
-    var numy=2-parseInt((height-y)/60);
+    var height= $('#oprater').offset().top-0.1; //防止边界问题加+0.1
+    var Width= $('#oprater').offset().left-0.1; //防止边界问题
+    var numx=parseInt((x-Width)/60)+1;
+    var numy=parseInt((y-height)/60);
     return  numx+3*numy
 }
 var targedSpeed=0.2;
@@ -233,6 +233,8 @@ function Deal(num)
           case 9:
             setRemote("speed", -targedSpeed);
             setRemote("speeddiff",-targedSpeeddiffer);
+         break;
+         default:
          break;
 }
 }
