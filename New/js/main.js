@@ -186,8 +186,8 @@ function orientationHandler(event) {
     }
 }
 function CalumniateNum(x,y){
-    var height=window.screen.height+0.1; //防止边界问题加+0.1
-    var Width=window.screen.width+0.1; //防止边界问题
+    var height=document.body.clientHeight+0.1; //防止边界问题加+0.1
+    var Width=document.body.clientWidth+0.1; //防止边界问题
     var numx=3-parseInt((Width-x)/60);
     var numy=2-parseInt((height-y)/60);
     return  numx+3*numy
