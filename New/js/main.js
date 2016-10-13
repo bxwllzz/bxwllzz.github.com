@@ -260,6 +260,7 @@ function touchStart(event){
 function touchEnd()
 {
      $("#oprater").unbind('touchmove',touchmoving);  //注册移动事件
+     $('#oprater span').css('background-color','white');
      Deal(5);  //速度清0
     console.log(5);
 }
