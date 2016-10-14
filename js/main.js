@@ -86,6 +86,7 @@ function wsOnClose(evt) {
     clearWsTimeout();
     console.log("已断开");
     $("#status").html("已断开");
+    websocket.close();
     websocket = null;
     if (wsTryOpen) {
         wsOnOpening();
