@@ -267,15 +267,29 @@ function touchEnd()
 }
 var plot;
 var plot2d;
+var clickTime=0;
 $(document).ready(function(){
 
     $("#debug").click(function(){
-        console.log(1);
-        $("#message").css("display","block");
-        $("#plot-container").css("display","block");
-         $("#alldata").css("display","block");
-        
-        plot2d = new RealtimePlot1D($("#plot-container"), deviceData, 20);
+        if(clickTime==0||clickTime==3)
+        {
+          
+            $("#message").css("display","block");
+            $("#plot-container").css("display","block");
+            $("#alldata").css("display","block");
+            if(clickTime==0)
+            {
+                plot2d = new RealtimePlot1D($("#plot-container"), deviceData, 20);
+            }
+             clickTime=1;
+        }
+        else
+        {
+            clickTime=3;
+            $("#message").css("display","none");
+            $("#plot-container").css("display","none");
+            $("#alldata").css("display","none");
+        }
     });   
     $(function(argument) {
       $('[type="checkbox"]').bootstrapSwitch();
