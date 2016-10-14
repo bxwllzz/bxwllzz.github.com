@@ -55,6 +55,9 @@ function pageRender() {
 
 var isFinished = true;
 function wsOnMessage(evt) {
+    if (evt.target != websocket) {
+        evt.target.close();
+    }
     clearWsTimeout();
     if (typeof evt.data == "object" && evt.data instanceof Blob) {
         // console.log("收到二进制数据");
