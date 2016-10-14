@@ -251,6 +251,7 @@ function touchmoving(event){
     }
 }
 function touchStart(event){
+    event.preventDefault(); //取消默认事件
     currentnum=CalumniateNum(event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY);
     $('#oprater span:nth-child('+currentnum+')').css('background-color','black')
     Deal(currentnum);
