@@ -268,6 +268,15 @@ function touchEnd()
 var plot;
 var plot2d;
 $(document).ready(function(){
+
+    $("#debug").click(function(){
+        console.log(1);
+        $("#message").css("display","block");
+        $("#plot-container").css("display","block");
+         $("#alldata").css("display","block");
+        
+        plot2d = new RealtimePlot1D($("#plot-container"), deviceData, 20);
+    });   
     $(function(argument) {
       $('[type="checkbox"]').bootstrapSwitch();
     });

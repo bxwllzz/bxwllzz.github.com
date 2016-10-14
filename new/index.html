@@ -10,7 +10,7 @@
     <link href="css/bootstrap-switch.min.css" rel="stylesheet">
      <link href="css/main.css" rel="stylesheet">
   </head>
-  <body style=" -webkit-user-select: none; height:100%">
+  <body style=" -webkit-user-select: none;">
   <!-- //登入输出 -->
   <div class="input-group">
 
@@ -40,22 +40,56 @@
     <input type="text"  id="speeddiff" value="0" class="form-control"/>
     <span class="input-group-btn">
     <button onclick="websocket.send('speeddiff=' + $('#speeddiff')[0].value)" class="btn btn-info">设置差速</button> -->
-    </span>
+   </span>
   </div>
 
-  <div style="display:none">
+  <div style="display:none" id="message">
    消息:<span id="textFrame"></span>
   </div>
 
     <div class="btn-group" style="margin-bottom:5px">
     <button onclick="websocket.send('reset')" class="btn btn-info" >复位</button>
+    <button  class="btn btn-info" id="debug">调试</button>
     <!-- <button onclick="deviceData.exportXLSX()" class="btn btn-info" >导出</button> -->
     </div>
     <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-id-switch-size bootstrap-switch-animate bootstrap-switch-on bootstrap-switch-small">
      <input type="checkbox"  />
     </div>
-    <div id="alldata" class="table-responsive" style="display :none">
-    <table border="1" width="100%"  class="table">
+    
+
+
+    <!-- <div style="text-align: center">实时路径图</div> -->
+    <div id="plot-container2" style="height: 400px; margin: 0px 20px 0px 0px"></div>
+    <div style="height:180px; width:180px;  position: fixed;bottom: 0; right: 0" id="oprater">
+       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px; float:left"  >
+          <img src="pic/al.png"  style="width: 40px;transform: rotate(225deg); margin: 10px;pointer-events: none; " >
+       </span>
+       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px;float:left" >
+       <img src="pic/al.png"  style="width: 40px;transform: rotate(-90deg); margin: 10px;pointer-events: none; " >
+       </span>
+       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px; float:left"  >
+         <img src="pic/al.png"  style="width: 40px;transform: rotate(-45deg); margin: 10px;pointer-events: none; " >
+       </span>
+       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px;float:left" >
+         <img src="pic/al.png"  style="width: 40px;transform: rotate(180deg); margin: 10px;pointer-events: none; " >
+       </span>
+       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px; float:left"  >
+       </span>
+       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px;float:left" >
+         <img src="pic/al.png"  style="width: 40px;transform: rotate(0deg); margin: 10px;pointer-events: none; " >
+       </span>
+       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px; float:left"  >
+         <img src="pic/al.png"  style="width: 40px;transform: rotate(135deg); margin: 10px;pointer-events: none; " >
+       </span>
+       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px;float:left" >
+         <img src="pic/al.png"  style="width: 40px;transform: rotate(90deg); margin: 10px;pointer-events: none; " >
+       </span>
+       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px;float:left" >
+         <img src="pic/al.png"  style="width: 40px;transform: rotate(45deg); margin: 10px;pointer-events: none; " >
+       </span>
+    </div>
+    <div id="alldata"  style="display :none">
+    <table border="1" width="100%" >
     <tr>
     <td width="25%">系统运行时间(s)</td><td id="data0" width="25%"></td><td width="25%">接收数据包数</td><td id="data_count" width="25%"></td>
     </tr>
@@ -100,39 +134,8 @@
     </tr>
     </table>
     </div>
-
     <div style="text-align: center; display:none" >数据波形图1</div>
-    <div id="plot-container" style="height: 300px; margin: 0px 20px 0px 0px;display:none" ></div>
-    <!-- <div style="text-align: center">实时路径图</div> -->
-    <div id="plot-container2" style="height: 400px; margin: 0px 20px 0px 0px"></div>
-    <div style="height:180px; width:180px;  position: fixed;bottom: 0; right: 0" id="oprater">
-       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px; float:left"  >
-          <img src="pic/al.png"  style="width: 40px;transform: rotate(225deg); margin: 10px;pointer-events: none; " >
-       </span>
-       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px;float:left" >
-       <img src="pic/al.png"  style="width: 40px;transform: rotate(-90deg); margin: 10px;pointer-events: none; " >
-       </span>
-       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px; float:left"  >
-         <img src="pic/al.png"  style="width: 40px;transform: rotate(-45deg); margin: 10px;pointer-events: none; " >
-       </span>
-       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px;float:left" >
-         <img src="pic/al.png"  style="width: 40px;transform: rotate(180deg); margin: 10px;pointer-events: none; " >
-       </span>
-       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px; float:left"  >
-       </span>
-       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px;float:left" >
-         <img src="pic/al.png"  style="width: 40px;transform: rotate(0deg); margin: 10px;pointer-events: none; " >
-       </span>
-       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px; float:left"  >
-         <img src="pic/al.png"  style="width: 40px;transform: rotate(135deg); margin: 10px;pointer-events: none; " >
-       </span>
-       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px;float:left" >
-         <img src="pic/al.png"  style="width: 40px;transform: rotate(90deg); margin: 10px;pointer-events: none; " >
-       </span>
-       <span  style="height:60px;width:60px;font:60px;background-color:white;opacity:0.5;margin:0px;float:left" >
-         <img src="pic/al.png"  style="width: 40px;transform: rotate(45deg); margin: 10px;pointer-events: none; " >
-       </span>
-    </div>
+    <div id="plot-container" style="height: 300px; margin: 0px 20px 0px 0px; display:none" ></div>
     <!-- <div style="background-color:red;height: 400px;" ></div> -->
 
 
@@ -147,8 +150,5 @@
   <script src="js/data.js"></script>
   <script src="js/chart3d.js"></script>
   <script src="js/bootstrap-switch.min.js"></script>
-      <script>
-
-    </script>
   </body>
 </html>
