@@ -17,7 +17,7 @@ function setWsTimeout() {
         if (websocket.readyState == websocket.CONNECTING) {
             wsTimeout = setTimeout("wsOnOpenTimeout()", parseInt($("#openTimeout")[0].value) * 1000);
         } else if (websocket.readyState == websocket.OPEN) {
-            // wsTimeout = setTimeout("wsOnNodataTimeout()", parseInt($("#nodataTimeout")[0].value) * 1000);
+            wsTimeout = setTimeout("wsOnNodataTimeout()", parseInt($("#nodataTimeout")[0].value) * 1000);
         } else if (websocket.readyState == websocket.CLOSING) {
             wsTimeout = setTimeout("wsOnCloseTimeout()", parseInt($("#closeTimeout")[0].value) * 1000);
         }
