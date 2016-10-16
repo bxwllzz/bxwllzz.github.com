@@ -237,7 +237,7 @@ function orientationHandler(event) {
     }
     if (event.gamma < -z) {
         // 逆时针旋转
-        var val = (-z - event.beta) * 0.02;
+        var val = (-z - event.gamma) * 0.02;
         setRemote("speeddiff", val.toFixed(1));
     } else if (event.gamma > z) {
         // 顺时针旋转
