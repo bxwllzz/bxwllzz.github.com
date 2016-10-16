@@ -225,11 +225,11 @@ function orientationHandler(event) {
     var z = 5;
     if (event.beta < -z) {
         // 前进
-        var val = (-z - event.beta) * 0.01;
+        var val = (-z - event.beta) * 0.02;
         setRemote("speed", val.toFixed(2));
     } else if (event.beta > z) {
         // 后退
-        var val = (event.beta - z) * -0.01;
+        var val = (event.beta - z) * -0.02;
         setRemote("speed", val.toFixed(2));
     } else if (event.beta < z && event.beta > -z) {
         setRemote("speed", 0);
