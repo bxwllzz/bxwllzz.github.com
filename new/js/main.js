@@ -223,22 +223,26 @@ var targedSpeed=0.3;
 var targedSpeeddiffer=0.4;
 //定义角度处理函数
 function orientationHandler(event) {  
-    var z = 10;
+    var z = 5;
     if (event.beta < -z) {
-        //setRemote("speed", (event.beta - -z) / -20);
-        setRemote("speed", 0.3);
+        // 前进
+        var val = (-z - event.beta) * 0.01;
+        setRemote("speed", (val.toFixed(1));
     } else if (event.beta > z) {
-        //setRemote("speed", (event.beta - z) / -20);
-        setRemote("speed", -0.3);
+        // 后退
+        var val = (event.beta - z) * 0.01;
+        setRemote("speed", val.toFixed(1));
     } else if (event.beta < z && event.beta > -z) {
         setRemote("speed", 0);
     }
     if (event.gamma < -z) {
-        //setRemote("speeddiff", (event.gamma - -z) / -10);
-        setRemote("speeddiff", 0.4);
+        // 逆时针旋转
+        var val = (-z - event.beta) * 0.02;
+        setRemote("speeddiff", val.toFixed(1));
     } else if (event.gamma > z) {
-        //setRemote("speeddiff", (event.gamma - z) / -10);
-        setRemote("speeddiff", -0.4);
+        // 顺时针旋转
+        var val = (event.gamma - z) * 0.02;
+        setRemote("speeddiff", val.toFixed(1));
     } else if (event.gamma < z && event.gamma > -z) {
         setRemote("speeddiff", 0);
     }
