@@ -230,7 +230,7 @@ function orientationHandler(event) {
         setRemote("speed", val.toFixed(1));
     } else if (event.beta > z) {
         // 后退
-        var val = (event.beta - z) * 0.01;
+        var val = (event.beta - z) * -0.01;
         setRemote("speed", val.toFixed(1));
     } else if (event.beta < z && event.beta > -z) {
         setRemote("speed", 0);
@@ -241,7 +241,7 @@ function orientationHandler(event) {
         setRemote("speeddiff", val.toFixed(1));
     } else if (event.gamma > z) {
         // 顺时针旋转
-        var val = (event.gamma - z) * 0.02;
+        var val = (event.gamma - z) * -0.02;
         setRemote("speeddiff", val.toFixed(1));
     } else if (event.gamma < z && event.gamma > -z) {
         setRemote("speeddiff", 0);
