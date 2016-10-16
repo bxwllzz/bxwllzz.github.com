@@ -189,7 +189,6 @@ function setRemote(k, v) {
     if (remoteControl[k] != v) {
         remoteControl[k] = v;
         $("#" + k)[0].value = v;
-        updateRemote();
     }
 }
 function resetRemote() {
@@ -227,22 +226,22 @@ function orientationHandler(event) {
     if (event.beta < -z) {
         // 前进
         var val = (-z - event.beta) * 0.01;
-        setRemote("speed", val.toFixed(1));
+        setRemote("speed", val.toFixed(2));
     } else if (event.beta > z) {
         // 后退
         var val = (event.beta - z) * -0.01;
-        setRemote("speed", val.toFixed(1));
+        setRemote("speed", val.toFixed(2));
     } else if (event.beta < z && event.beta > -z) {
         setRemote("speed", 0);
     }
     if (event.gamma < -z) {
         // 逆时针旋转
         var val = (-z - event.gamma) * 0.02;
-        setRemote("speeddiff", val.toFixed(1));
+        setRemote("speeddiff", val.toFixed(2));
     } else if (event.gamma > z) {
         // 顺时针旋转
         var val = (event.gamma - z) * -0.02;
-        setRemote("speeddiff", val.toFixed(1));
+        setRemote("speeddiff", val.toFixed(2));
     } else if (event.gamma < z && event.gamma > -z) {
         setRemote("speeddiff", 0);
     }
