@@ -10,9 +10,24 @@ var DeviceData = function(maxLength, frameLength) {
     this.push = function(data) {
         if (this.length < this.maxLength - 1) {
             var new_data = new Float32Array(data);
+            var int32_data = new Int32Array(data);
             if (new_data.length % this.frameLength != 0) {
-                throw("DeviceData.push(data) bad data");
-            } else if (new_data[0] < this.time) {
+                console.log("DeviceData.push(data) bad data");
+                return;
+            } 
+            var frameCount = new_data.length / this.frameLength;
+            for (var n = 0; n < frameCount; n++) {
+                var check_sum = 0;
+                var sum = int32_data[(n+1)*this.frameLength-1];
+                for (var i = 0; i < this.frameLength - 1; i++) {
+                    check_sum ^= int32_data[n*this.frameLength+i];
+                }
+                if (sum != check_sum) {
+                    console.log("DeviceData.push(data) bad check_sum");
+                    return;
+                }
+            }
+            if (new_data[0] < this.time) {
                 console.log("remote device restart!!!");
                 this.length = 0;
             }
