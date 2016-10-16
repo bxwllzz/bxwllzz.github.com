@@ -35,7 +35,6 @@ function wsOnOpen(evt) {
     clearWsTimeout();
     console.log("已连接");
     $("#status").html("已连接");
-    setAllRemote();
     setWsTimeout();
 }
 
@@ -76,7 +75,11 @@ function wsOnMessage(evt) {
         }
     } else if (typeof evt.data == "string") {
         // console.log("收到文本数据");
-        $("#textFrame").html(evt.data);
+        try {
+            remoteConfirm = JSON.parse(evt.data);
+        } catch (e) {
+            $("#textFrame").html(evt.data);
+        }
     }
     setWsTimeout();
 }
@@ -84,6 +87,10 @@ function wsOnError(evt) {
     console.log("发生错误");
 }
 function wsOnClose(evt) {
+    if (websocket.readyState == websocket.CONNECTING || 
+        websocket.readyState == websocket.OPEN) {
+        throw("unexpected ws close event");
+    }
     clearWsTimeout();
     console.log("已断开");
     $("#status").html("已断开");
@@ -156,20 +163,33 @@ function dataRefreshHandler() {
     //refreshInterval = setTimeout(dataRefreshHandler, 1);
 }
 
-var remoteControl = {speed: 0, speeddiff: 0};
-function setAllRemote() {
-    var i = 1;
-    for (var k in remoteControl) {
-        var v = remoteControl[k];
-        setTimeout("websocket.send(\"" + k + "=" + v + "\")", 100 * i);
-        i++;
+var remoteControl = {speed:0,speeddiff:0};
+var remoteConfirm = {speed:0,speeddiff:0};
+function updateRemote() {
+    if (websocket != null 
+        && websocket.readyState == websocket.OPEN) 
+    {
+        if (websocket.bufferedAmount < 128) {
+            var needUpdate = false;
+            for (k in remoteControl) {
+                if (remoteControl[k] != remoteConfirm[k]) {
+                    needUpdate = true;
+                    break;
+                }
+            }
+            if (needUpdate) {
+                var cmd = "set " + remoteControl.speed + " " + remoteControl.speeddiff;
+                console.log(cmd);
+                websocket.send(cmd);
+            }
+        }
     }
 } 
 function setRemote(k, v) {
-    if (remoteControl[k] != v && websocket != null && websocket.readyState == websocket.OPEN) {
+    if (remoteControl[k] != v) {
         remoteControl[k] = v;
-        websocket.send(k + "=" + v);
         $("#" + k)[0].value = v;
+        updateRemote();
     }
 }
 function resetRemote() {
@@ -445,5 +465,6 @@ $(document).ready(function(){
     $("#data10").click();
     $("#data11").click();
     
+    setInterval(updateRemote, 200);
     requestAnimationFrame(pageRender);
 });

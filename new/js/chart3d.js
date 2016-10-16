@@ -107,6 +107,10 @@ var BasePlot2D = function(domElement, xmin, xmax, ymin, ymax, xInterval, yInterv
         var max = axis == "x" ? this.xmax : this.ymax;
         var interval = axis == "x" ? this.xInterval : this.yInterval;
         var parent = this.domElement;
+        
+        if (min >= max) {
+            return;
+        }
 
         parent.find("." + axis + "label").attr("need-remove", true);
         grid.pointNum = 0;
