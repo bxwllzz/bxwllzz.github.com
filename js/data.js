@@ -18,9 +18,9 @@ var DeviceData = function(maxLength, frameLength) {
             for (var n = 0; n < frameCount; n++) {
                 var check_sum = 0;
                 for (var i = 0; i < this.frameLength - 1; i++) {
-                    check_sum += uint32_data[n*this.frameLength+i];
+                    check_sum ^= uint32_data[n*this.frameLength+i];
                 }
-                if (uint32_data[(n+1)*this.frameLength] != check_sum) {
+                if (uint32_data[(n+1)*this.frameLength-1] != check_sum) {
                     console.log("DeviceData.push(data) bad check_sum", check_sum, uint32_data[(n+1)*this.frameLength-1]);
                 }
             }
