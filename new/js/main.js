@@ -35,6 +35,7 @@ function wsOnOpen(evt) {
     clearWsTimeout();
     console.log("已连接");
     $("#status").html("已连接");
+    setAllRemote();
     setWsTimeout();
 }
 
@@ -156,6 +157,14 @@ function dataRefreshHandler() {
 }
 
 var remoteControl = {speed: 0, speeddiff: 0};
+function setAllRemote() {
+    var i = 1;
+    for (var k in remoteControl) {
+        var v = remoteControl[k];
+        setTimeout("websocket.send(\"" + k + "=" + v + "\")", 100 * i);
+        i++;
+    }
+} 
 function setRemote(k, v) {
     if (remoteControl[k] != v && websocket != null && websocket.readyState == websocket.OPEN) {
         remoteControl[k] = v;
@@ -163,6 +172,35 @@ function setRemote(k, v) {
         $("#" + k)[0].value = v;
     }
 }
+function resetRemote() {
+    console.log("复位中");
+    $("#status").html("复位中");
+    clearWsTimeout();
+    websocket.send("reset");
+    setTimeout(function() {
+        websocket.close();
+        websocket = null;
+        if (wsTryOpen) {
+            wsOnOpening();
+        } else {
+            $("#wsServer").prop('disabled', false);
+            $("#openTimeout").prop('disabled', false);
+            $("#closeTimeout").prop('disabled', false);
+            $("#nodataTimeout").prop('disabled', false);
+        }
+    }, 500);
+}
+
+
+function CalumniateNum(x,y){
+    var height= $('#oprater').offset().top-0.1; //防止边界问题加+0.1
+    var Width= $('#oprater').offset().left-0.1; //防止边界问题
+    var numx=parseInt((x-Width)/60)+1;
+    var numy=parseInt((y-height)/60);
+    return  numx+3*numy
+}
+var targedSpeed=0.3;
+var targedSpeeddiffer=0.4;
 //定义角度处理函数
 function orientationHandler(event) {  
     var z = 10;
@@ -185,15 +223,6 @@ function orientationHandler(event) {
         setRemote("speeddiff", 0);
     }
 }
-function CalumniateNum(x,y){
-    var height= $('#oprater').offset().top-0.1; //防止边界问题加+0.1
-    var Width= $('#oprater').offset().left-0.1; //防止边界问题
-    var numx=parseInt((x-Width)/60)+1;
-    var numy=parseInt((y-height)/60);
-    return  numx+3*numy
-}
-var targedSpeed=0.2;
-var targedSpeeddiffer=0.4;
 function Deal(num)
 {
     switch(num)
@@ -236,8 +265,36 @@ function Deal(num)
          break;
          default:
          break;
+    }
 }
+function keyDownHandler(event) {
+    if (event.keyCode == 37) { // 左
+        setRemote("speeddiff", 0.4);
+        return false;
+    } 
+    if (event.keyCode == 39) { // 右
+        setRemote("speeddiff", -0.4);
+        return false;
+    } 
+    if (event.keyCode == 38) { // 上
+        setRemote("speed", 0.3);
+        return false;
+    } 
+    if (event.keyCode == 40) { // 下
+        setRemote("speed", -0.3);
+        return false;
+    }
 }
+function keyUpHandler(event) {
+    if (event.keyCode == 37 || event.keyCode == 39) { // 右
+        setRemote("speeddiff", 0);
+    }
+    if (event.keyCode == 38 || event.keyCode == 40) { // 下
+        setRemote("speed", 0);
+    }
+}
+
+
 var currentnum;
 function touchmoving(event){
     var tempNum=CalumniateNum(event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY);
@@ -345,24 +402,8 @@ $(document).ready(function(){
         $("#disconnect").prop('disabled', true);
         wsOnClosing();
     });
-    $(document).keydown(function (event) {
-        if (event.keyCode == 37) { // 左
-            setRemote("speeddiff", 0.4);
-        } else if (event.keyCode == 39) { // 右
-            setRemote("speeddiff", -0.4);
-        } else if (event.keyCode == 38) { // 上
-            setRemote("speed", 0.3);
-        } else if (event.keyCode == 40) { // 下
-            setRemote("speed", -0.3);
-        }
-    });
-    $(document).keyup(function (event) {
-        if (event.keyCode == 37 || event.keyCode == 39) { // 右
-            setRemote("speeddiff", 0);
-        } else if (event.keyCode == 38 || event.keyCode == 40) { // 下
-            setRemote("speed", 0);
-        }
-    });
+    $(document).keydown(keyDownHandler);
+    $(document).keyup(keyUpHandler);
 
     
     stats = new Stats();
