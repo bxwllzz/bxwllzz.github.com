@@ -582,6 +582,17 @@ var RealtimePlot2D = function(domElement, data, interval) {
         this.updateGrid();
         return false;
     }
+    this.Insertbackround = function(){
+        var geometry = new THREE.PlaneGeometry(1, 1);
+        var texture = THREE.ImageUtils.loadTexture("pic/1.jpg",null,function(t)
+         {
+            plot2d2.renderer.render(plot2d2.scene, plot2d2.camera);
+        });
+        var material = new THREE.MeshBasicMaterial({map:texture});
+        var mesh = new THREE.Mesh( geometry,material );
+        mesh.position.set(0.5, 0.5, 0);
+        this.scene.add( mesh );
+    }
     // 渲染
     this.render = function() {
         if (this.dataIndex.length && this.update()) {
