@@ -4,3 +4,17 @@ width: 200px;
 height: 200px; 
 /* 宽度和高度需要相等 */
 }
+.divcss{
+    height:60px;
+    width:60px;
+    font:60px;
+    background-color:white;
+    opacity:0.5;
+    margin:0px;
+    float:left
+}
+.imgpic{
+    width: 40px;
+    margin: 10px;
+    pointer-events: none; 
+}
