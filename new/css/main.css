@@ -18,3 +18,39 @@ height: 200px;
     margin: 10px;
     pointer-events: none; 
 }
+.imgpic_23{
+    width: 28px;
+    margin: 6px;
+}
+.Number{
+    background-color:grey;
+     float:left;
+     height:100%;
+     width:40px;
+     opacity: 0.5;
+}
+.Number span{
+    font-size: 20px;
+    text-align: center;
+    line-height: 40px;
+    display: block;
+}
+.Pic{
+    width: 80px;
+    float: left;
+
+}
+.divcss_40{
+    height:40px;
+    width:40px;
+    font:60px;
+    background-color:white;
+    opacity:0.5;
+    margin:0px;
+    float:left
+}
+.switch_t{
+    float: left;
+    width: 80px;
+    height: 40px;
+}

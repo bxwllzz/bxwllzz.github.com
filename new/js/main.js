@@ -211,11 +211,11 @@ function resetRemote() {
 }
 
 
-function CalumniateNum(x,y){
-    var height= $('#oprater').offset().top-0.1; //防止边界问题加+0.1
-    var Width= $('#oprater').offset().left-0.1; //防止边界问题
-    var numx=parseInt((x-Width)/60)+1;
-    var numy=parseInt((y-height)/60);
+function CalumniateNum(id,x,y,unitx,unity){
+    var height= $(id).offset().top-0.1; //防止边界问题加+0.1
+    var Width= $(id).offset().left-0.1; //防止边界问题
+    var numx=parseInt((x-Width)/unitx)+1;
+    var numy=parseInt((y-height)/unity);
     return  numx+3*numy
 }
 var targedSpeed=0.3;
@@ -320,7 +320,7 @@ function keyUpHandler(event) {
 
 var currentnum;
 function touchmoving(event){
-    var tempNum=CalumniateNum(event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY);
+    var tempNum=CalumniateNum('#oprater',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,60,60);
     if(currentnum!=tempNum)
     {
         $('#oprater span:nth-child('+currentnum+')').css('background-color','white')
@@ -330,18 +330,44 @@ function touchmoving(event){
         console.log(currentnum);
     }
 }
+function touchmoving_RobotArm(event){
+    var tempNum=CalumniateNum('#ArmOperate',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,40,40);
+    if(currentnum!=tempNum)
+    {
+        $('#ArmOperate span:nth-child('+currentnum+')').css('background-color','white')
+        $('#ArmOperate span:nth-child('+tempNum+')').css('background-color','black')
+        currentnum=tempNum;
+        Deal(currentnum);
+        console.log(currentnum);
+    }
+}
 function touchStart(event){
     event.preventDefault(); //取消默认事件
-    currentnum=CalumniateNum(event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY);
+    currentnum=CalumniateNum('#oprater',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,60,60);
     $('#oprater span:nth-child('+currentnum+')').css('background-color','black')
     Deal(currentnum);
     console.log(currentnum);
     $("#oprater").bind('touchmove',touchmoving);  //注册移动事件
 }
+function touchStart_RobotArm(event){
+    event.preventDefault(); //取消默认事件
+    currentnum=CalumniateNum('#ArmOperate',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,40,40);
+    $('#ArmOperate span:nth-child('+currentnum+')').css('background-color','black')
+    Deal(currentnum);
+    console.log(currentnum);
+    $("#ArmOperate").bind('touchmove',touchmoving_RobotArm);  //注册移动事件
+}
 function touchEnd()
 {
      $("#oprater").unbind('touchmove',touchmoving);  //注册移动事件
      $('#oprater span').css('background-color','white');
+     Deal(5);  //速度清0
+    console.log(5);
+}
+function touchEnd_RobotArm()
+{
+    $("#ArmOperate").unbind('touchmove',touchmoving_RobotArm);  //注册移动事件
+     $('#ArmOperate span').css('background-color','white');
      Deal(5);  //速度清0
     console.log(5);
 }
@@ -402,6 +428,9 @@ $(document).ready(function(){
     //添加move事件
     $("#oprater").bind('touchstart',touchStart);
     $("#oprater").bind('touchend',touchEnd);
+    
+    $("#ArmOperate").bind('touchstart',touchStart_RobotArm);
+    $("#ArmOperate").bind('touchend',touchEnd_RobotArm);
 
     // 初始化数据存储
     deviceData = new DeviceData();
