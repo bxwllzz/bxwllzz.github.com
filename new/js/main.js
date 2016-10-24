@@ -35,6 +35,8 @@ function wsOnOpen(evt) {
     clearWsTimeout();
     console.log("已连接");
     $("#status").html("已连接");
+    //初始化爪子的数组
+    websocket.send("robot:aaaa043f010100bf");
     setWsTimeout();
 }
 
@@ -211,12 +213,12 @@ function resetRemote() {
 }
 
 
-function CalumniateNum(id,x,y,unitx,unity){
+function CalumniateNum(id,x,y,unitx,unity,rowNum){
     var height= $(id).offset().top-0.1; //防止边界问题加+0.1
     var Width= $(id).offset().left-0.1; //防止边界问题
     var numx=parseInt((x-Width)/unitx)+1;
     var numy=parseInt((y-height)/unity);
-    return  numx+3*numy
+    return  numx+rowNum*numy
 }
 var targedSpeed=0.3;
 var targedSpeeddiffer=0.4;
@@ -290,6 +292,40 @@ function Deal(num)
          break;
     }
 }
+function Deal_ARM(num)
+{
+    //处理前发生1个停止请求 
+     websocket.send("robot:aaaa0449010000b6");
+    switch(num)
+    {
+        case 1:
+           websocket.send("robot:aaaa0449010001b5");
+         break;
+         case 2:
+             websocket.send("robot:aaaa0449010002b4");
+         break;
+          case 3:
+             websocket.send("robot:aaaa0449010003b3");
+         break;
+          case 4:
+             websocket.send("robot:aaaa0449010004b2");
+         break;
+          case 5:
+             websocket.send("robot:aaaa0449010005b1");
+         break;
+          case 6:
+             websocket.send("robot:aaaa0449010006b0");
+         break;
+          case 7:
+            websocket.send("robot:aaaa0449010007af");
+         break;
+          case 8:
+             websocket.send("robot:aaaa0449010008ae");
+         break;
+         default:
+         break;
+    }
+}
 function keyDownHandler(event) {
     if (event.keyCode == 37) { // 左
         setRemote("speeddiff", 0.4);
@@ -319,8 +355,9 @@ function keyUpHandler(event) {
 
 
 var currentnum;
+var currentnum_robot;
 function touchmoving(event){
-    var tempNum=CalumniateNum('#oprater',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,60,60);
+    var tempNum=CalumniateNum('#oprater',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,60,60,3);
     if(currentnum!=tempNum)
     {
         $('#oprater span:nth-child('+currentnum+')').css('background-color','white')
@@ -331,19 +368,19 @@ function touchmoving(event){
     }
 }
 function touchmoving_RobotArm(event){
-    var tempNum=CalumniateNum('#ArmOperate',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,40,40);
-    if(currentnum!=tempNum)
+    var tempNum=CalumniateNum('#ArmOperate',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,40,40,2);
+    if(currentnum_robot!=tempNum)
     {
-        $('#ArmOperate span:nth-child('+currentnum+')').css('background-color','white')
+        $('#ArmOperate span:nth-child('+currentnum_robot+')').css('background-color','white')
         $('#ArmOperate span:nth-child('+tempNum+')').css('background-color','black')
-        currentnum=tempNum;
-        Deal(currentnum);
-        console.log(currentnum);
+        currentnum_robot=tempNum;
+        Deal_ARM(currentnum_robot);
+        console.log(currentnum_robot);
     }
 }
 function touchStart(event){
     event.preventDefault(); //取消默认事件
-    currentnum=CalumniateNum('#oprater',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,60,60);
+    currentnum=CalumniateNum('#oprater',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,60,60,3);
     $('#oprater span:nth-child('+currentnum+')').css('background-color','black')
     Deal(currentnum);
     console.log(currentnum);
@@ -351,10 +388,10 @@ function touchStart(event){
 }
 function touchStart_RobotArm(event){
     event.preventDefault(); //取消默认事件
-    currentnum=CalumniateNum('#ArmOperate',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,40,40);
-    $('#ArmOperate span:nth-child('+currentnum+')').css('background-color','black')
-    Deal(currentnum);
-    console.log(currentnum);
+    currentnum_robot=CalumniateNum('#ArmOperate',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,40,40,2);
+    $('#ArmOperate span:nth-child('+currentnum_robot+')').css('background-color','black')
+    Deal_ARM(currentnum_robot);
+    console.log(currentnum_robot);
     $("#ArmOperate").bind('touchmove',touchmoving_RobotArm);  //注册移动事件
 }
 function touchEnd()
@@ -398,10 +435,22 @@ $(document).ready(function(){
         }
     });   
     $(function(argument) {
-      $('[type="checkbox"]').bootstrapSwitch();
+      $('#angleControl').bootstrapSwitch();
+      $('#clawControl').bootstrapSwitch();
+      //先发送爪子闭合(保证是张开)
     });
+     $('#angleControl').on('switchChange.bootstrapSwitch', function (e, data) {
+        if(data==false)
+        {
+            websocket.send("robot:aaaa043f010101be");
+        }
+        else
+        {
+            websocket.send("robot:aaaa043f010100bf");
+        }
+     });
     //增加事件
-    $('[type="checkbox"]').on('switchChange.bootstrapSwitch', function (e, data) {
+    $('#angleControl').on('switchChange.bootstrapSwitch', function (e, data) {
      
         if(data==false)
         {
