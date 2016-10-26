@@ -164,6 +164,7 @@ function dataRefreshHandler() {
     }
     //refreshInterval = setTimeout(dataRefreshHandler, 1);
 }
+//这段代码为什么
 
 var remoteControl = {speed:0,speeddiff:0};
 var remoteConfirm = {speed:0,speeddiff:0};
