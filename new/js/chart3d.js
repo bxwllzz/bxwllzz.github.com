@@ -349,7 +349,7 @@ var RealtimePlot2D = function(domElement, data, interval) {
     this.data = data;
     this.interval = interval == null ? 0.5 : interval;  // 默认两个点的最小像素间距为0.5
     // 继承BasePlot2D, 默认绘制2x2的大小
-    BasePlot2D.apply(this, [domElement, ]);
+    BasePlot2D.apply(this, [domElement, -1, 1, ]);
     // 保持横纵比为1:1
     this.ymin = -(this.xmax - this.xmin) / 2 * this.canvas.y / this.canvas.x;
     this.ymax = (this.xmax - this.xmin) / 2 * this.canvas.y / this.canvas.x;
@@ -583,15 +583,15 @@ var RealtimePlot2D = function(domElement, data, interval) {
         return false;
     }
     this.Insertbackround = function(){
-        var geometry = new THREE.PlaneGeometry(1, 1);
+        var geometry = new THREE.PlaneGeometry(2/(this.xmax-this.xmin), 1.5/(this.ymax-this.ymin));
         var texture = THREE.ImageUtils.loadTexture("pic/1.jpg",null,function(t)
          {
             plot2d2.renderer.render(plot2d2.scene, plot2d2.camera);
         });
         var material = new THREE.MeshBasicMaterial({map:texture});
         var mesh = new THREE.Mesh( geometry,material );
-        mesh.position.set(0.5, 0.5, 0);
-        this.scene.add( mesh );
+        mesh.position.set((0 - this.xmin)/(this.xmax-this.xmin), (0 - this.ymin)/(this.ymax-this.ymin), 0);
+        this.scene.add(mesh);
     }
     // 渲染
     this.render = function() {

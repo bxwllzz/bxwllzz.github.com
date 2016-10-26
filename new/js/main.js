@@ -166,8 +166,8 @@ function dataRefreshHandler() {
 }
 //这段代码为什么
 
-var remoteControl = {speed:0,speeddiff:0};
-var remoteConfirm = {speed:0,speeddiff:0};
+var remoteControl = {speed:0,speeddiff:0,robot:0,claw:0};
+var remoteConfirm = {speed:0,speeddiff:0,robot:0,claw:0};
 function updateRemote() {
     if (websocket != null 
         && websocket.readyState == websocket.OPEN) 
@@ -181,7 +181,7 @@ function updateRemote() {
                 }
             }
             if (needUpdate) {
-                var cmd = "set " + remoteControl.speed + " " + remoteControl.speeddiff;
+                var cmd = "set " + remoteControl.speed + " " + remoteControl.speeddiff+" " + remoteControl.robot+" " + remoteControl.claw;
                 console.log(cmd);
                 websocket.send(cmd);
             }
@@ -191,7 +191,10 @@ function updateRemote() {
 function setRemote(k, v) {
     if (remoteControl[k] != v) {
         remoteControl[k] = v;
-        $("#" + k)[0].value = v;
+        if(robot=="speed")
+        {
+            $("#" + k)[0].value = v;
+        }
     }
 }
 function resetRemote() {
@@ -296,36 +299,7 @@ function Deal(num)
 function Deal_ARM(num)
 {
     //处理前发生1个停止请求 
-     websocket.send("robot:aaaa0449010000b6");
-    switch(num)
-    {
-        case 1:
-           websocket.send("robot:aaaa0449010001b5");
-         break;
-         case 2:
-             websocket.send("robot:aaaa0449010002b4");
-         break;
-          case 3:
-             websocket.send("robot:aaaa0449010003b3");
-         break;
-          case 4:
-             websocket.send("robot:aaaa0449010004b2");
-         break;
-          case 5:
-             websocket.send("robot:aaaa0449010005b1");
-         break;
-          case 6:
-             websocket.send("robot:aaaa0449010006b0");
-         break;
-          case 7:
-            websocket.send("robot:aaaa0449010007af");
-         break;
-          case 8:
-             websocket.send("robot:aaaa0449010008ae");
-         break;
-         default:
-         break;
-    }
+    setRemote("robot",num);
 }
 function keyDownHandler(event) {
     if (event.keyCode == 37) { // 左
@@ -405,8 +379,8 @@ function touchEnd()
 function touchEnd_RobotArm()
 {
     $("#ArmOperate").unbind('touchmove',touchmoving_RobotArm);  //注册移动事件
-     $('#ArmOperate span').css('background-color','white');
-     Deal(5);  //速度清0
+    $('#ArmOperate span').css('background-color','white');
+    Deal_ARM(0);  //速度清0
     console.log(5);
 }
 var plot;
@@ -440,14 +414,14 @@ $(document).ready(function(){
       $('#clawControl').bootstrapSwitch();
       //先发送爪子闭合(保证是张开)
     });
-     $('#angleControl').on('switchChange.bootstrapSwitch', function (e, data) {
+    $('#angleControl').on('switchChange.bootstrapSwitch', function (e, data) {
         if(data==false)
         {
-            websocket.send("robot:aaaa043f010101be");
+            setRemote("claw",0);
         }
         else
         {
-            websocket.send("robot:aaaa043f010100bf");
+            setRemote("claw",1);
         }
      });
     //增加事件
