@@ -36,7 +36,6 @@ function wsOnOpen(evt) {
     console.log("已连接");
     $("#status").html("已连接");
     //初始化爪子的数组
-    websocket.send("robot:aaaa043f010100bf");
     setWsTimeout();
 }
 
