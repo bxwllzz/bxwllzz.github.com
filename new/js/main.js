@@ -194,6 +194,7 @@ function setRemote(k, v) {
         {
             $("#" + k)[0].value = v;
         }
+        updateRemote();
     }
 }
 function resetRemote() {
@@ -223,8 +224,8 @@ function CalumniateNum(id,x,y,unitx,unity,rowNum){
     var numy=parseInt((y-height)/unity);
     return  numx+rowNum*numy
 }
-var targedSpeed=0.3;
-var targedSpeeddiffer=0.4;
+var targedSpeed=0.1;
+var targedSpeeddiffer=0.1;
 //定义角度处理函数
 function orientationHandler(event) {  
     var z = 5;
@@ -417,7 +418,7 @@ $(document).ready(function(){
             setRemote("claw",0);
         }
         else
-        {
+        { 
             setRemote("claw",1);
         }
      });
