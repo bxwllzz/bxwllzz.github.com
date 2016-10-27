@@ -161,7 +161,6 @@ function dataRefreshHandler() {
     if (hasNewData) {
         hasNewData = false;
     }
-    //refreshInterval = setTimeout(dataRefreshHandler, 1);
 }
 //这段代码为什么
 
@@ -332,7 +331,17 @@ function keyUpHandler(event) {
 var currentnum;
 var currentnum_robot;
 function touchmoving(event){
-    var tempNum=CalumniateNum('#oprater',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,60,60,3);
+    if(event.type=="mousemove")
+    {
+       var x=event.pageX;
+       var y=event.pageY;
+    }
+    else
+    {
+        var x=event.originalEvent.touches[0].pageX;
+        var y=event.originalEvent.touches[0].pageY;
+    }
+    var tempNum=CalumniateNum('#oprater',x,y,60,60,3);
     if(currentnum!=tempNum)
     {
         $('#oprater span:nth-child('+currentnum+')').css('background-color','white')
@@ -343,7 +352,17 @@ function touchmoving(event){
     }
 }
 function touchmoving_RobotArm(event){
-    var tempNum=CalumniateNum('#ArmOperate',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,40,40,2);
+    if(event.type=="mousemove")
+    {
+       var x=event.pageX;
+       var y=event.pageY;
+    }
+    else
+    {
+        var x=event.originalEvent.touches[0].pageX;
+        var y=event.originalEvent.touches[0].pageY;
+    }
+    var tempNum=CalumniateNum('#ArmOperate',x,y,40,40,2);
     if(currentnum_robot!=tempNum)
     {
         $('#ArmOperate span:nth-child('+currentnum_robot+')').css('background-color','white')
@@ -355,29 +374,53 @@ function touchmoving_RobotArm(event){
 }
 function touchStart(event){
     event.preventDefault(); //取消默认事件
-    currentnum=CalumniateNum('#oprater',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,60,60,3);
+    if(event.type=="mousedown")
+    {
+       var x=event.pageX;
+       var y=event.pageY;
+    }
+    else
+    {
+        var x=event.originalEvent.touches[0].pageX;
+        var y=event.originalEvent.touches[0].pageY;
+    }
+    currentnum=CalumniateNum('#oprater',x,y,60,60,3);
     $('#oprater span:nth-child('+currentnum+')').css('background-color','black');
     Deal(currentnum);
     console.log(currentnum);
     $("#oprater").bind('touchmove',touchmoving);  //注册移动事件
+    $("#oprater").bind('mousemove',touchmoving);  //注册移动事件
 }
 function touchStart_RobotArm(event){
     event.preventDefault(); //取消默认事件
-    currentnum_robot=CalumniateNum('#ArmOperate',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,40,40,2);
+    if(event.type=="mousedown")
+    {
+       var x=event.pageX;
+       var y=event.pageY;
+    }
+    else
+    {
+        var x=event.originalEvent.touches[0].pageX;
+        var y=event.originalEvent.touches[0].pageY;
+    }
+    currentnum_robot=CalumniateNum('#ArmOperate',x,y,40,40,2);
     $('#ArmOperate span:nth-child('+currentnum_robot+')').css('background-color','black')
     Deal_ARM(currentnum_robot);
     console.log(currentnum_robot);
     $("#ArmOperate").bind('touchmove',touchmoving_RobotArm);  //注册移动事件
+    $("#ArmOperate").bind('mousemove',touchmoving_RobotArm);  //注册移动事件
 }
 function touchEnd()
 {
      $("#oprater").unbind('touchmove',touchmoving);  //注册移动事件
+      $("#oprater").unbind('mousemove',touchmoving);  //注册移动事件
      $('#oprater span').css('background-color','white');
      Deal(5);  //速度清0
 }
 function touchEnd_RobotArm()
 {
     $("#ArmOperate").unbind('touchmove',touchmoving_RobotArm);  //注册移动事件
+    $("#ArmOperate").unbind('mousemove',touchmoving_RobotArm);  //注册移动事件
     $('#ArmOperate span').css('background-color','white');
     Deal_ARM(0);  //速度清0
 }
@@ -454,11 +497,8 @@ $(document).ready(function(){
                  window.removeEventListener("deviceorientation", orientationHandler, false); 
             }
             //同时关闭
-            if(websocket != null)
-            {
-                websocket.send('speed=0');
-                websocket.send('speeddiff=0');
-            }
+            setRemote("speed", 0);
+            setRemote("speeddiff",0);
             console.log("close");
         }
         else
@@ -481,9 +521,13 @@ $(document).ready(function(){
     //添加move事件
     $("#oprater").bind('touchstart',touchStart);
     $("#oprater").bind('touchend',touchEnd);
+    $('#oprater').bind('mousedown',touchStart);
+    $('#oprater').bind('mouseup',touchEnd);
     
     $("#ArmOperate").bind('touchstart',touchStart_RobotArm);
     $("#ArmOperate").bind('touchend',touchEnd_RobotArm);
+    $("#ArmOperate").bind('mousedown',touchStart_RobotArm);
+    $("#ArmOperate").bind('mouseup',touchEnd_RobotArm);
 
     // 初始化数据存储
     deviceData = new DeviceData();
