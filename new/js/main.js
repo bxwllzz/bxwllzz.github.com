@@ -356,7 +356,7 @@ function touchmoving_RobotArm(event){
 function touchStart(event){
     event.preventDefault(); //取消默认事件
     currentnum=CalumniateNum('#oprater',event.originalEvent.touches[0].pageX,event.originalEvent.touches[0].pageY,60,60,3);
-    $('#oprater span:nth-child('+currentnum+')').css('background-color','black')
+    $('#oprater span:nth-child('+currentnum+')').css('background-color','black');
     Deal(currentnum);
     console.log(currentnum);
     $("#oprater").bind('touchmove',touchmoving);  //注册移动事件
@@ -380,6 +380,29 @@ function touchEnd_RobotArm()
     $("#ArmOperate").unbind('touchmove',touchmoving_RobotArm);  //注册移动事件
     $('#ArmOperate span').css('background-color','white');
     Deal_ARM(0);  //速度清0
+}
+function DisplaySet(type,objectF)
+{
+    if(type=="head")
+    {
+        //hied head
+        $(".postionCar").fadeOut("slow");
+        $('.postionArm').fadeOut("slow");
+        //显示对于的
+        if(objectF=="car")
+            $('.direction').fadeIn();
+        else
+            $('.RobotArm').fadeIn();
+    }
+    else
+    {
+        if(objectF=="car")
+            $('.direction').fadeOut("slow");
+        else
+            $('.RobotArm').fadeOut("slow");
+        $(".postionCar").fadeIn();
+        $('.postionArm').fadeIn();
+    }
 }
 var plot;
 var plot2d;
@@ -447,6 +470,14 @@ $(document).ready(function(){
         }
 
     });
+
+     $(".postionArm").bind('click',function(){DisplaySet("head","arm");});
+     $(".postionCar").bind('click',function(){DisplaySet("head","car");});
+     $(".RobotArm>.panel-heading").bind('click',function(){DisplaySet("body","arm");});
+     $(".direction>.panel-heading").bind('click',function(){DisplaySet("body","car");});
+
+     
+
     //添加move事件
     $("#oprater").bind('touchstart',touchStart);
     $("#oprater").bind('touchend',touchEnd);

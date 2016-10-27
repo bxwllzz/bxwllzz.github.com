@@ -43,14 +43,56 @@ height: 200px;
 .divcss_40{
     height:40px;
     width:40px;
-    font:60px;
+    font-size:20px;
     background-color:white;
     opacity:0.5;
     margin:0px;
-    float:left
+    float:left;
+    line-height: 40px;
+    text-align: center;
+    color:#afafaf;
 }
 .switch_t{
     float: left;
     width: 80px;
     height: 40px;
+}
+.RobotArm{
+     width:120px;
+     position: fixed;
+     bottom: 0px;
+     right: 0;
+     border:0px;
+     display:none;
+     margin-bottom: 30px;
+}
+.direction{
+    width:180px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    border:0px;
+    margin-bottom: 0px;
+    display: none;
+}
+.pointCar{
+    width: 50px;
+    float: right;
+}
+.postionCar{
+    position: fixed;
+    bottom: 180px;
+    right: 0px;
+     margin-bottom: 0px;
+
+}
+.postionArm{
+    position: fixed;
+    bottom: 220px;
+    right: 0;
+    margin-bottom: 10px;
+}
+body
+{
+    font-family: "Microsoft YaHei"
 }
