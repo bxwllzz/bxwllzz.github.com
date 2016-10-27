@@ -373,14 +373,12 @@ function touchEnd()
      $("#oprater").unbind('touchmove',touchmoving);  //注册移动事件
      $('#oprater span').css('background-color','white');
      Deal(5);  //速度清0
-    console.log(5);
 }
 function touchEnd_RobotArm()
 {
     $("#ArmOperate").unbind('touchmove',touchmoving_RobotArm);  //注册移动事件
     $('#ArmOperate span').css('background-color','white');
     Deal_ARM(0);  //速度清0
-    console.log(5);
 }
 var plot;
 var plot2d;
@@ -413,7 +411,7 @@ $(document).ready(function(){
       $('#clawControl').bootstrapSwitch();
       //先发送爪子闭合(保证是张开)
     });
-    $('#angleControl').on('switchChange.bootstrapSwitch', function (e, data) {
+    $('#clawControl').on('switchChange.bootstrapSwitch', function (e, data) {
         if(data==false)
         {
             setRemote("claw",0);
