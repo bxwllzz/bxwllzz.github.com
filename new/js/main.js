@@ -190,7 +190,7 @@ function updateRemote() {
 function setRemote(k, v) {
     if (remoteControl[k] != v) {
         remoteControl[k] = v;
-        if(robot=="speed")
+        if(k=="speed")
         {
             $("#" + k)[0].value = v;
         }
