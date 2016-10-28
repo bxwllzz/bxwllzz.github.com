@@ -180,7 +180,7 @@ function updateRemote() {
             }
             if (needUpdate) {
                 var cmd = "set " + remoteControl.speed + " " + remoteControl.speeddiff+" " + remoteControl.robot+" " + remoteControl.claw;
-                console.log(cmd);
+                console.log(remoteControl.toJSONString());
                 websocket.send(cmd);
             }
         }
