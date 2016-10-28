@@ -83,7 +83,7 @@ height: 200px;
     position: fixed;
     bottom: 180px;
     right: 0px;
-     margin-bottom: 0px;
+    margin-bottom: 0px;
 
 }
 .postionArm{
@@ -91,6 +91,15 @@ height: 200px;
     bottom: 220px;
     right: 0;
     margin-bottom: 10px;
+}
+.pointCar img{
+    width: 26px;
+    /* text-align: center; */
+    margin: 0 auto;
+    display: block;
+}
+.padding {
+    padding: 7px 0px;
 }
 body
 {
