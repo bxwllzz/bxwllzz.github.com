@@ -215,7 +215,8 @@ function resetRemote() {
     console.log("复位中");
     $("#status").html("复位中");
     clearWsTimeout();
-    websocket.send("reset");
+    var cmd = {runonce: "reset"};
+    websocket.send(JSON.stringify(cmd));
     setTimeout(function() {
         websocket.close();
         websocket = null;
@@ -228,6 +229,12 @@ function resetRemote() {
             $("#nodataTimeout").prop('disabled', false);
         }
     }, 500);
+}
+// 急停
+function emergencyStop() {
+    remoteControl = {speed:0,speeddiff:0,robot:0,claw:0};
+    var cmd = {runonce: "stop"};
+    websocket.send(JSON.stringify(cmd));
 }
 
 
