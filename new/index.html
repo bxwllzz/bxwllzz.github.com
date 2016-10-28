@@ -38,11 +38,11 @@
 		<div class="input-group">
 			<input type="text" id="speed" value="0" class="form-control" />
 			<span class="input-group-btn">
-      <button onclick="websocket.send('speed=' + $('#speed')[0].value)" class="btn btn-info" >设置车速</button>
+      <button onclick="setRemote('speed',$('#speed')[0].value)" class="btn btn-info" >设置车速</button>
     </span>
 			<input type="text" id="speeddiff" value="0" class="form-control" />
 			<span class="input-group-btn">
-    <button onclick="websocket.send('speeddiff=' + $('#speeddiff')[0].value)" class="btn btn-info">设置差速</button> -->
+    <button onclick="setRemote('speeddiff',$('#speeddiff')[0].value)" class="btn btn-info">设置差速</button> -->
    </span>
 		</div>
 
@@ -51,10 +51,12 @@
 		</div>
 
 		<div class="btn-group" style="margin-bottom:5px">
+			<button onclick="emergencyStop()" class="btn btn-info">急停</button>
 			<button onclick="resetRemote()" class="btn btn-info">复位</button>
 			<button class="btn btn-info" id="debug">调试</button>
 			<!-- <button onclick="deviceData.exportXLSX()" class="btn btn-info" >导出</button> -->
 		</div>
+        重力感应控制:
 		<div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-id-switch-size bootstrap-switch-animate bootstrap-switch-on bootstrap-switch-small">
 			<input type="checkbox" id="angleControl" />
 		</div>

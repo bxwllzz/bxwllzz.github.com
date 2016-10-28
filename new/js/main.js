@@ -76,9 +76,20 @@ function wsOnMessage(evt) {
         }
     } else if (typeof evt.data == "string") {
         // console.log("收到文本数据");
-        try {
-            remoteConfirm = JSON.parse(evt.data);
-        } catch (e) {
+        if (evt.data[0] == '{') {
+            try {
+                var response = JSON.parse(evt.data);
+                for (k in response) {
+                    if (k == "runonce") {
+                        console.log("runonce command \"" + response[k] + "\" confirmed!!!");
+                    } else {
+                        remoteConfirm[k] = response[k];
+                    }
+                }
+            } catch (e) {
+                console.log(evt.data);
+            }
+        } else {
             $("#textFrame").html(evt.data);
         }
     }
@@ -162,8 +173,12 @@ function dataRefreshHandler() {
         hasNewData = false;
     }
 }
-//这段代码为什么
 
+// 上位机向下位机发送指令说明: 
+// 包含了与下位机 同步控制变量 和 发送一次性控制指令 的功能；
+// 指令为json格式, 下位机在收到后会以文本帧的形式响应相同的json指令；
+// 特别的, 指令中的runonce字段, 将在下位机运行一次。
+// 例如发送 {"runonce":"stop"} 下位机将急停, 并回复{"runonce":"stop", ...其他控制量}
 var remoteControl = {speed:0,speeddiff:0,robot:0,claw:0};
 var remoteConfirm = {speed:0,speeddiff:0,robot:0,claw:0};
 function updateRemote() {
@@ -179,8 +194,8 @@ function updateRemote() {
                 }
             }
             if (needUpdate) {
-                var cmd = "set " + remoteControl.speed + " " + remoteControl.speeddiff+" " + remoteControl.robot+" " + remoteControl.claw;
-                console.log(remoteControl.toJSONString());
+                var cmd = JSON.stringify(remoteControl);
+                console.log(cmd);
                 websocket.send(cmd);
             }
         }
@@ -200,7 +215,8 @@ function resetRemote() {
     console.log("复位中");
     $("#status").html("复位中");
     clearWsTimeout();
-    websocket.send("reset");
+    var cmd = {runonce: "reset"};
+    websocket.send(JSON.stringify(cmd));
     setTimeout(function() {
         websocket.close();
         websocket = null;
@@ -213,6 +229,12 @@ function resetRemote() {
             $("#nodataTimeout").prop('disabled', false);
         }
     }, 500);
+}
+// 急停
+function emergencyStop() {
+    remoteControl = {speed:0,speeddiff:0,robot:0,claw:0};
+    var cmd = {runonce: "stop"};
+    websocket.send(JSON.stringify(cmd));
 }
 
 
@@ -569,7 +591,7 @@ $(document).ready(function(){
     plot2d2 = new RealtimePlot2D($("#plot-container2"), deviceData);
     // plot2d2.addDataIndex([28, 29], 0xFF0000);
     plot2d2.Insertbackround();
-    plot2d2.addDataIndex([31, 32], 0x0000FF);
+    plot2d2.addDataIndex([31, 32], 0xFF0000);
     // plot2d2.addDataIndex([34, 35], 0xFF9900);
 
     var lineColors = ["FF0000", "FF9900", "00FF00", "FFFF00", "0000FF", "9900FF"];

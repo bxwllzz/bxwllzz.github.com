@@ -391,7 +391,7 @@ var RealtimePlot2D = function(domElement, data, interval) {
         if (color == null)  color = 0x000000;   // 默认颜色
         var geometry = new THREE.BufferGeometry();
         geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(this.maxPoints * 3), 3));
-        var line = new THREE.Line(geometry, new THREE.LineBasicMaterial({color: new THREE.Color(color)}));
+        var line = new THREE.Line(geometry, new THREE.LineBasicMaterial({color: new THREE.Color(color), linewidth: 5}));
         line.pointNum = 0;
         line.geometry.setDrawRange(0, line.pointNum);
         this.scene.add(line);
