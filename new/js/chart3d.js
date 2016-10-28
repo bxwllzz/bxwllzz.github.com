@@ -454,6 +454,7 @@ var RealtimePlot2D = function(domElement, data, interval) {
                 points[line.pointNum*3+1] = (data[index[1]] - this.ymin) / (this.ymax - this.ymin);
                 points[line.pointNum*3+2] = 2;
                 line.pointNum++;
+                //通知图层更新
                 lastData = data;
             }
             data = this.data.get(data.index + 1);
@@ -567,6 +568,8 @@ var RealtimePlot2D = function(domElement, data, interval) {
                     this.xmax = center + (this.ymax - this.ymin) / 2 * this.canvas.x / this.canvas.y;
                 }
                 // 绘制新坐标轴
+                //绘制汽车的位置
+                this.
                 this.updateInterval();
             }
             this.updateGrid();
@@ -592,6 +595,28 @@ var RealtimePlot2D = function(domElement, data, interval) {
         var mesh = new THREE.Mesh( geometry,material );
         mesh.position.set((0 - this.xmin)/(this.xmax-this.xmin), (0 - this.ymin)/(this.ymax-this.ymin), 0);
         this.scene.add(mesh);
+    }
+    this.addopject=function(){
+       var geometry = new THREE.PlaneGeometry(0.3/(this.xmax-this.xmin), 0.15/(this.ymax-this.ymin));
+       var texture = THREE.ImageUtils.loadTexture("pic/car-icon.png",null,function(t)
+         {
+            plot2d2.renderer.render(plot2d2.scene, plot2d2.camera);
+        });
+        var material = new THREE.MeshBasicMaterial({map:texture});
+        material.transparent = true;
+        var cone = new THREE.Mesh( geometry, material );
+        cone.rotateZ(Math.PI)   //构造旋转的角度
+        cone.position.set(0.5, 0.5, 0);    //构造距离    
+        this.scene.add(cone);
+        this.picCar=cone;
+
+    }
+    this.upadateObeject=function(pos,angle){
+        if(this.picCar != undefined)
+        {
+            this.picCar.position.set(pos.x,pos.y);
+            cone.rotateZ(angle);   //构造旋转的角度
+        }
     }
     // 渲染
     this.render = function() {

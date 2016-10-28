@@ -470,6 +470,7 @@ function DisplaySet(type,objectF)
     }
 }
 var plot;
+var plot2d2;
 var plot2d;
 var clickTime=0;
 $(document).ready(function(){
@@ -591,6 +592,7 @@ $(document).ready(function(){
     plot2d2 = new RealtimePlot2D($("#plot-container2"), deviceData);
     // plot2d2.addDataIndex([28, 29], 0xFF0000);
     plot2d2.Insertbackround();
+    plot2d2.addopject();
     plot2d2.addDataIndex([31, 32], 0xFF0000);
     // plot2d2.addDataIndex([34, 35], 0xFF9900);
 
