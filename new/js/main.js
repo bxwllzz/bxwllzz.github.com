@@ -582,18 +582,19 @@ $(document).ready(function(){
     stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
     //document.body.appendChild( stats.dom );
     
-    
+    // 强制设定路径图为正方形
+    $("#plot-container2").height($("#plot-container2").width() - 20);
 
     plot2d = new RealtimePlot1D($("#plot-container"), deviceData, 20);
     //plot2d.addDataIndex(22, 0xFF0000);
     //plot2d.addDataIndex(31, 0x0000FF);
     //plot2d.addDataIndex(32, 0x00FF00);
     //plot2d.addDataIndex(23, 0xFF9900);
-    plot2d2 = new RealtimePlot2D($("#plot-container2"), deviceData);
+    plot2d2 = new RealtimePlot2D($("#plot-container2"), deviceData, 0.5, true);
     // plot2d2.addDataIndex([28, 29], 0xFF0000);
-    plot2d2.setBackround("./pic/1.jpg", 2, 1, 0, 0);
-    plot2d2.setTarget("./pic/car-icon.png", 0.3, 0.15);
-    plot2d2.addDataIndex([31, 32], 0xFF0000);
+    plot2d2.setBackround("./pic/1.jpg", 2, 2, 0, 0);
+    plot2d2.setTarget("./pic/car-icon.png", 0.3, 0.15, 31, 32, 15);
+    plot2d2.addDataIndex([31, 32], 0x00FF00);
     // plot2d2.addDataIndex([34, 35], 0xFF9900);
 
     var lineColors = ["FF0000", "FF9900", "00FF00", "FFFF00", "0000FF", "9900FF"];

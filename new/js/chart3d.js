@@ -64,7 +64,7 @@ var BasePlot2D = function(domElement, xmin, xmax, ymin, ymax, xInterval, yInterv
     this.domElement.append(this.renderer.domElement);
     this.renderer.setClearColor(0xFFFFFF, 1.0);
     // 初始化相机
-    this.label = {x: 40, y: 20, w: 0, h: 0};
+    this.label = {x: 40, y: 20, w: 0, h: 0};    // 预留左侧40px以及底部20px为刻度
     this.canvas = {x: 0, y: 0, w: 1, h: 1, top: this.domElement.position().top, left: this.domElement.position().left + this.label.x};
     this.canvas.x = this.width - this.label.x;
     this.canvas.y = this.height - this.label.y;
@@ -342,12 +342,13 @@ var RealtimePlot1D = function(domElement, data, maxTime) {
 }
 
 // 当两个点的像素间距大于minInterval时,才绘制新点
-var RealtimePlot2D = function(domElement, data, interval) {
+var RealtimePlot2D = function(domElement, data, interval, disableReGrid) {
     if (data == null) {
         throw("RealtimePlot2D(domElement, data, minInterval) must define data");
     }
     this.data = data;
     this.interval = interval == null ? 0.5 : interval;  // 默认两个点的最小像素间距为0.5
+    this.disableReGrid = disableReGrid ? true : false;
     // 继承BasePlot2D, 默认绘制2x2的大小
     BasePlot2D.apply(this, [domElement, -1, 1, ]);
     // 保持横纵比为1:1
@@ -469,116 +470,126 @@ var RealtimePlot2D = function(domElement, data, interval) {
             // 重绘
             // 有新数据点
             this.time = this.data.time;
-            // 分离x,y轴索引
-            var x_indexes = [];
-            var y_indexes = [];
-            for (k in this.dataIndex) {
-                var v = this.dataIndex[k];
-                x_indexes.push(v[0]);
-                y_indexes.push(v[1]);
+            if (!this.disableReGrid) { // 判断是否禁止坐标轴更新
+                // 分离x,y轴索引
+                var x_indexes = [];
+                var y_indexes = [];
+                for (k in this.dataIndex) {
+                    var v = this.dataIndex[k];
+                    x_indexes.push(v[0]);
+                    y_indexes.push(v[1]);
+                }
+                // 统计数据最大最小值
+                var minmax_x = this.data.statsRange(x_indexes, -1, null);
+                var minmax_y = this.data.statsRange(y_indexes, -1, null);
+                if (minmax_x[0] == null || minmax_y[0] == null) {
+                    return false;
+                }
+                this.datamax = [minmax_x[1], minmax_y[1]];
+                this.datamin = [minmax_x[0], minmax_y[0]];
+                // 设置绘图范围
+                this.xmin = minmax_x[0] - (minmax_x[1] - minmax_x[0]) * 0.1;
+                this.xmax = minmax_x[1] + (minmax_x[1] - minmax_x[0]) * 0.1;
+                this.ymin = minmax_y[0] - (minmax_y[1] - minmax_y[0]) * 0.1;
+                this.ymax = minmax_y[1] + (minmax_y[1] - minmax_y[0]) * 0.1;
+                if (this.xmax - this.xmin < 0.1) {
+                    this.xmax += 0.05;
+                    this.xmin -= 0.05;
+                }
+                if (this.ymax - this.ymin < 0.1) {
+                    this.ymax += 0.05;
+                    this.ymin -= 0.05;
+                }
+                this.updateInterval();
+                this.updateGrid();
             }
-            // 统计数据最大最小值
-            var minmax_x = this.data.statsRange(x_indexes, -1, null);
-            var minmax_y = this.data.statsRange(y_indexes, -1, null);
-            if (minmax_x[0] == null || minmax_y[0] == null) {
-                return false;
-            }
-            this.datamax = [minmax_x[1], minmax_y[1]];
-            this.datamin = [minmax_x[0], minmax_y[0]];
-            // 设置绘图范围
-            this.xmin = minmax_x[0] - (minmax_x[1] - minmax_x[0]) * 0.1;
-            this.xmax = minmax_x[1] + (minmax_x[1] - minmax_x[0]) * 0.1;
-            this.ymin = minmax_y[0] - (minmax_y[1] - minmax_y[0]) * 0.1;
-            this.ymax = minmax_y[1] + (minmax_y[1] - minmax_y[0]) * 0.1;
-            if (this.xmax - this.xmin < 0.1) {
-                this.xmax += 0.05;
-                this.xmin -= 0.05;
-            }
-            if (this.ymax - this.ymin < 0.1) {
-                this.ymax += 0.05;
-                this.ymin -= 0.05;
-            }
-            this.updateInterval();
-            this.updateGrid();
             for (i in this.dataIndex) {
                 this.clearLine(this.dataIndex[i]);
                 this.fillLine(this.dataIndex[i]);
+            }
+            // 更新目标旋转值和位置
+            if (this.meshTarget) {
+                this.meshTarget.updateTarget();
             }
             return true;
         } else if (this.data.time > this.time) {
             // 有新数据点
             this.time = this.data.time;
-            // 分离x,y轴索引
-            var x_indexes = [];
-            var y_indexes = [];
-            for (k in this.dataIndex) {
-                var v = this.dataIndex[k];
-                x_indexes.push(v[0]);
-                y_indexes.push(v[1]);
-            }
-            // 统计数据最大最小值
-            var minmax_x = this.data.statsRange(x_indexes, -1, null);
-            var minmax_y = this.data.statsRange(y_indexes, -1, null);
-            if (minmax_x[0] == null || minmax_y[0] == null) {
-                return false;
-            }
-            this.datamax[0] = minmax_x[1] > this.datamax[0] || this.datamax[0] == null ? minmax_x[1] : this.datamax[0];
-            this.datamax[1] = minmax_y[1] > this.datamax[1] || this.datamax[1] == null ? minmax_y[1] : this.datamax[1];
-            this.datamin[0] = minmax_x[0] < this.datamin[0] || this.datamin[0] == null ? minmax_x[0] : this.datamin[0];
-            this.datamin[1] = minmax_y[0] < this.datamin[1] || this.datamin[1] == null ? minmax_y[0] : this.datamin[1];
-            // 判断是否需要更新绘图范围
-            var needResize = false;
-            if (minmax_x[0] < this.xmin && minmax_x[1] > this.xmax) {
-                this.xmin = this.datamin[0] - (this.datamax[0] - this.datamin[0]) * 0.1;
-                this.xmax = this.datamax[0] + (this.datamax[0] - this.datamin[0]) * 0.1;
-                needResize = true;
-            } else if (minmax_x[0] < this.xmin && minmax_x[1] <= this.xmax) {
-                this.xmin = this.datamin[0] - (this.datamax[0] - this.datamin[0]) * 0.1;
-                this.xmax = this.datamax[0] + (this.datamax[0] - this.datamin[0]) * 0.1;
-                needResize = true;
-            } else if (minmax_x[0] >= this.xmin && minmax_x[1] > this.xmax) {
-                this.xmin = this.datamin[0] - (this.datamax[0] - this.datamin[0]) * 0.1;
-                this.xmax = this.datamax[0] + (this.datamax[0] - this.datamin[0]) * 0.1;
-                needResize = true;
-            }
-            if (minmax_y[0] < this.ymin && minmax_y[1] > this.ymax) {
-                this.ymin = this.datamin[1] - (this.datamax[1] - this.datamin[1]) * 0.1;
-                this.ymax = this.datamax[1] + (this.datamax[1] - this.datamin[1]) * 0.1;
-                needResize = true;
-            } else if (minmax_y[0] < this.ymin && minmax_y[1] <= this.ymax) {
-                this.ymin = this.datamin[1] - (this.datamax[1] - this.datamin[1]) * 0.1;
-                this.ymax = this.datamax[1] + (this.datamax[1] - this.datamin[1]) * 0.1;
-                needResize = true;
-            } else if (minmax_y[0] >= this.ymin && minmax_y[1] > this.ymax) {
-                this.ymin = this.datamin[1] - (this.datamax[1] - this.datamin[1]) * 0.1;
-                this.ymax = this.datamax[1] + (this.datamax[1] - this.datamin[1]) * 0.1;
-                needResize = true;
-            }
-            if (needResize) {
-                // 保持横纵比
-                if ((this.ymax - this.ymin) / this.canvas.y < (this.xmax - this.xmin) / this.canvas.x) {
-                    // 以x轴为基准
-                    var center = (this.ymin + this.ymax) / 2;
-                    this.ymin = center - (this.xmax - this.xmin) / 2 * this.canvas.y / this.canvas.x;
-                    this.ymax = center + (this.xmax - this.xmin) / 2 * this.canvas.y / this.canvas.x;
-                } else {
-                    // 以y轴为基准
-                    var center = (this.xmin + this.xmax) / 2;
-                    this.xmin = center - (this.ymax - this.ymin) / 2 * this.canvas.x / this.canvas.y;
-                    this.xmax = center + (this.ymax - this.ymin) / 2 * this.canvas.x / this.canvas.y;
+            if (!this.disableReGrid) { // 判断是否禁止坐标轴更新
+                // 分离x,y轴索引
+                var x_indexes = [];
+                var y_indexes = [];
+                for (k in this.dataIndex) {
+                    var v = this.dataIndex[k];
+                    x_indexes.push(v[0]);
+                    y_indexes.push(v[1]);
                 }
-                // 绘制新坐标轴
-                //绘制汽车的位置
-                this.
-                this.updateInterval();
+                // 统计数据最大最小值
+                var minmax_x = this.data.statsRange(x_indexes, -1, null);
+                var minmax_y = this.data.statsRange(y_indexes, -1, null);
+                if (minmax_x[0] == null || minmax_y[0] == null) {
+                    return false;
+                }
+                this.datamax[0] = minmax_x[1] > this.datamax[0] || this.datamax[0] == null ? minmax_x[1] : this.datamax[0];
+                this.datamax[1] = minmax_y[1] > this.datamax[1] || this.datamax[1] == null ? minmax_y[1] : this.datamax[1];
+                this.datamin[0] = minmax_x[0] < this.datamin[0] || this.datamin[0] == null ? minmax_x[0] : this.datamin[0];
+                this.datamin[1] = minmax_y[0] < this.datamin[1] || this.datamin[1] == null ? minmax_y[0] : this.datamin[1];
+                // 判断是否需要更新绘图范围
+                var needResize = false;
+                if (minmax_x[0] < this.xmin && minmax_x[1] > this.xmax) {
+                    this.xmin = this.datamin[0] - (this.datamax[0] - this.datamin[0]) * 0.1;
+                    this.xmax = this.datamax[0] + (this.datamax[0] - this.datamin[0]) * 0.1;
+                    needResize = true;
+                } else if (minmax_x[0] < this.xmin && minmax_x[1] <= this.xmax) {
+                    this.xmin = this.datamin[0] - (this.datamax[0] - this.datamin[0]) * 0.1;
+                    this.xmax = this.datamax[0] + (this.datamax[0] - this.datamin[0]) * 0.1;
+                    needResize = true;
+                } else if (minmax_x[0] >= this.xmin && minmax_x[1] > this.xmax) {
+                    this.xmin = this.datamin[0] - (this.datamax[0] - this.datamin[0]) * 0.1;
+                    this.xmax = this.datamax[0] + (this.datamax[0] - this.datamin[0]) * 0.1;
+                    needResize = true;
+                }
+                if (minmax_y[0] < this.ymin && minmax_y[1] > this.ymax) {
+                    this.ymin = this.datamin[1] - (this.datamax[1] - this.datamin[1]) * 0.1;
+                    this.ymax = this.datamax[1] + (this.datamax[1] - this.datamin[1]) * 0.1;
+                    needResize = true;
+                } else if (minmax_y[0] < this.ymin && minmax_y[1] <= this.ymax) {
+                    this.ymin = this.datamin[1] - (this.datamax[1] - this.datamin[1]) * 0.1;
+                    this.ymax = this.datamax[1] + (this.datamax[1] - this.datamin[1]) * 0.1;
+                    needResize = true;
+                } else if (minmax_y[0] >= this.ymin && minmax_y[1] > this.ymax) {
+                    this.ymin = this.datamin[1] - (this.datamax[1] - this.datamin[1]) * 0.1;
+                    this.ymax = this.datamax[1] + (this.datamax[1] - this.datamin[1]) * 0.1;
+                    needResize = true;
+                }
+                if (needResize) {
+                    // 保持横纵比
+                    if ((this.ymax - this.ymin) / this.canvas.y < (this.xmax - this.xmin) / this.canvas.x) {
+                        // 以x轴为基准
+                        var center = (this.ymin + this.ymax) / 2;
+                        this.ymin = center - (this.xmax - this.xmin) / 2 * this.canvas.y / this.canvas.x;
+                        this.ymax = center + (this.xmax - this.xmin) / 2 * this.canvas.y / this.canvas.x;
+                    } else {
+                        // 以y轴为基准
+                        var center = (this.xmin + this.xmax) / 2;
+                        this.xmin = center - (this.ymax - this.ymin) / 2 * this.canvas.x / this.canvas.y;
+                        this.xmax = center + (this.ymax - this.ymin) / 2 * this.canvas.x / this.canvas.y;
+                    }
+                    // 绘制新坐标轴
+                    this.updateInterval();
+                }
+                this.updateGrid();
             }
-            this.updateGrid();
             // 写入新数据
             for (i in this.dataIndex) {
                 if (needResize) {
                     this.clearLine(this.dataIndex[i]);
                 }
                 this.fillLine(this.dataIndex[i]);
+            }
+            // 更新目标旋转值和位置
+            if (this.meshTarget) {
+                this.meshTarget.updateTarget();
             }
             return true;
         }
@@ -599,25 +610,25 @@ var RealtimePlot2D = function(domElement, data, interval) {
         });
     }
     // 设置目标图片
-    // 参数: 图片url, 图宽度, 图高度
-    this.setTarget = function(pic_path, width, height) {
+    // 参数: 图片url, 图宽度, 图高度, X坐标对应的数据列, Y坐标对应的数据列, 目标的指向角度(航向角对应的数据列)
+    this.setTarget = function(pic_path, width, height, indexX, indexY, indexR) {
         var parent = this;
         new THREE.TextureLoader().load(pic_path, function(texture) {
             var geometry = new THREE.PlaneGeometry(width / (parent.xmax-parent.xmin), height/(parent.ymax-parent.ymin));
             var material = new THREE.MeshBasicMaterial({map:texture});
             material.transparent = true;    // 设置图片透明度
             parent.meshTarget = new THREE.Mesh(geometry,material);
-            parent.meshTarget.position.set((0 - parent.xmin)/(parent.xmax-parent.xmin), (0 - parent.ymin)/(parent.ymax-parent.ymin), 3);
+            parent.meshTarget.position.set((0 - parent.xmin)/(parent.xmax-parent.xmin), (0 - parent.ymin)/(parent.ymax-parent.ymin), 1);
+            parent.meshTarget.rotation.z = 0;
+            parent.meshTarget.updateTarget = function() {
+                var lastData = parent.data.get(-1);
+                parent.meshTarget.rotation.z = lastData[indexR] / 180 * Math.PI;
+                parent.meshTarget.position.x = (lastData[indexX] - parent.xmin)/(parent.xmax-parent.xmin);
+                parent.meshTarget.position.y = (lastData[indexY] - parent.ymin)/(parent.ymax-parent.ymin);
+            }
             parent.scene.add(parent.meshTarget);
             parent.render(true);    // 强制重绘
         });
-    }
-    this.upadateObeject=function(pos,angle){
-        if(this.picCar != undefined)
-        {
-            this.picCar.position.set(pos.x,pos.y);
-            cone.rotateZ(angle);   //构造旋转的角度
-        }
     }
     // 渲染
     this.render = function(force) {
