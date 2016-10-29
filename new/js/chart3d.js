@@ -379,7 +379,7 @@ var RealtimePlot2D = function(domElement, data, interval, disableReGrid) {
     this.datamax = [null, null];
     this.time = 0;  // 重绘计时
 
-    // 查找对应序号, 不存在则返回null
+    // 查找对应序号, 不存在则返回null(这段代码是干什么用的)
     this.findIndex = function(index) {
         var i = 0;
         for (k in this.dataIndex) {
@@ -635,6 +635,24 @@ var RealtimePlot2D = function(domElement, data, interval, disableReGrid) {
             parent.scene.add(parent.meshTarget);
             parent.render(true);    // 强制重绘
         });
+<<<<<<< HEAD
+=======
+        var material = new THREE.MeshBasicMaterial({map:texture});
+        material.transparent = true;
+        var cone = new THREE.Mesh( geometry, material );
+        cone.rotateZ(Math.PI/4)   //构造旋转的角度
+        cone.position.set(0.5, 0.5, 0);    //构造距离    
+        this.scene.add(cone);
+        this.picCar=cone;
+
+    }
+    this.upadateObeject=function(pos,angle){
+        if(this.picCar != undefined)
+        {
+            this.picCar.position.set(pos.x,pos.y);
+            cone.rotateZ(angle);   //构造旋转的角度
+        }
+>>>>>>> master
     }
     // 渲染
     this.render = function(force) {
