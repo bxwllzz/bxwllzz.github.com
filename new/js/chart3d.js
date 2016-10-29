@@ -635,24 +635,6 @@ var RealtimePlot2D = function(domElement, data, interval, disableReGrid) {
             parent.scene.add(parent.meshTarget);
             parent.render(true);    // 强制重绘
         });
-<<<<<<< HEAD
-=======
-        var material = new THREE.MeshBasicMaterial({map:texture});
-        material.transparent = true;
-        var cone = new THREE.Mesh( geometry, material );
-        cone.rotateZ(Math.PI/4)   //构造旋转的角度
-        cone.position.set(0.5, 0.5, 0);    //构造距离    
-        this.scene.add(cone);
-        this.picCar=cone;
-
-    }
-    this.upadateObeject=function(pos,angle){
-        if(this.picCar != undefined)
-        {
-            this.picCar.position.set(pos.x,pos.y);
-            cone.rotateZ(angle);   //构造旋转的角度
-        }
->>>>>>> master
     }
     // 渲染
     this.render = function(force) {
