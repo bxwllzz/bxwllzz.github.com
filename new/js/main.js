@@ -469,11 +469,25 @@ function DisplaySet(type,objectF)
         $('.postionArm').fadeIn();
     }
 }
+
+// 获取url参数
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+}
+
+
 var plot;
 var plot2d2;
 var plot2d;
 var clickTime=0;
 $(document).ready(function(){
+
+    // 当url中含有debug=1参数时, 隐藏class=debug的dom
+    if (getQueryString("debug") != "1") {
+        $(".debug").hide();
+    }
 
     $("#debug").click(function(){
         if(clickTime==0||clickTime==3)
@@ -583,7 +597,7 @@ $(document).ready(function(){
     //document.body.appendChild( stats.dom );
     
     // 强制设定路径图为正方形
-    $("#plot-container2").height($("#plot-container2").width() - 20);
+    $("#plot-container2").height($("#plot-container2").width());
 
     plot2d = new RealtimePlot1D($("#plot-container"), deviceData, 20);
     //plot2d.addDataIndex(22, 0xFF0000);
@@ -593,7 +607,7 @@ $(document).ready(function(){
     plot2d2 = new RealtimePlot2D($("#plot-container2"), deviceData, 0.5, true);
     // plot2d2.addDataIndex([28, 29], 0xFF0000);
     plot2d2.setBackround("./pic/1.jpg", 2, 2, 0, 0);
-    plot2d2.setTarget("./pic/car-icon.png", 0.3, 0.15, 31, 32, 15);
+    plot2d2.setTarget("./pic/car-icon.png", 0.4, 0.3, 31, 32, 15);
     plot2d2.addDataIndex([31, 32], 0x00FF00);
     // plot2d2.addDataIndex([34, 35], 0xFF9900);
 

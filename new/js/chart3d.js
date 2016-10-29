@@ -52,7 +52,7 @@ function deleteMesh(x) {
     }
 }
 
-var BasePlot2D = function(domElement, xmin, xmax, ymin, ymax, xInterval, yInterval) {
+var BasePlot2D = function(domElement, xmin, xmax, ymin, ymax, xInterval, yInterval, leftLabel, bottomLabel) {
     // 初始化THREE
     this.domElement = $(domElement);
     this.width = this.domElement.width();
@@ -64,7 +64,9 @@ var BasePlot2D = function(domElement, xmin, xmax, ymin, ymax, xInterval, yInterv
     this.domElement.append(this.renderer.domElement);
     this.renderer.setClearColor(0xFFFFFF, 1.0);
     // 初始化相机
-    this.label = {x: 40, y: 20, w: 0, h: 0};    // 预留左侧40px以及底部20px为刻度
+    this.leftLabel = leftLabel == null ? 40 : leftLabel;
+    this.bottomLabel = bottomLabel == null ? 20 : leftLabel;
+    this.label = {x: this.leftLabel, y: this.bottomLabel, w: 0, h: 0};    // 预留左侧40px以及底部20px为刻度
     this.canvas = {x: 0, y: 0, w: 1, h: 1, top: this.domElement.position().top, left: this.domElement.position().left + this.label.x};
     this.canvas.x = this.width - this.label.x;
     this.canvas.y = this.height - this.label.y;
@@ -350,7 +352,11 @@ var RealtimePlot2D = function(domElement, data, interval, disableReGrid) {
     this.interval = interval == null ? 0.5 : interval;  // 默认两个点的最小像素间距为0.5
     this.disableReGrid = disableReGrid ? true : false;
     // 继承BasePlot2D, 默认绘制2x2的大小
-    BasePlot2D.apply(this, [domElement, -1, 1, ]);
+    if (this.disableReGrid) {
+        BasePlot2D.apply(this, [domElement, -1, 1, null, null, null, null, 0, 0, ]);
+    } else {
+        BasePlot2D.apply(this, [domElement, -1, 1, ]);
+    }
     // 保持横纵比为1:1
     this.ymin = -(this.xmax - this.xmin) / 2 * this.canvas.y / this.canvas.x;
     this.ymax = (this.xmax - this.xmin) / 2 * this.canvas.y / this.canvas.x;
