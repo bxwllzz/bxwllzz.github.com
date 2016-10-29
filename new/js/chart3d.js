@@ -585,31 +585,32 @@ var RealtimePlot2D = function(domElement, data, interval) {
         this.updateGrid();
         return false;
     }
+    // 设置画布背景
+    // 参数: 图片url, 图宽度, 图高度, 图中心x位置, 图中心y位置
     this.setBackround = function(pic_path, width, height, x, y) {
-        var geometry = new THREE.PlaneGeometry(width/(this.xmax-this.xmin), height/(this.ymax-this.ymin));
-        var texture = THREE.ImageUtils.loadTexture(pic_path,null,function(t)
-        {
-            plot2d2.renderer.render(plot2d2.scene, plot2d2.camera);
+        var parent = this;
+        new THREE.TextureLoader().load(pic_path, function(texture) {
+            var geometry = new THREE.PlaneGeometry(width / (parent.xmax-parent.xmin), height/(parent.ymax-parent.ymin));
+            var material = new THREE.MeshBasicMaterial({map:texture});
+            parent.meshBackGround = new THREE.Mesh(geometry,material);
+            parent.meshBackGround.position.set((x - parent.xmin)/(parent.xmax-parent.xmin), (y - parent.ymin)/(parent.ymax-parent.ymin), 1);
+            parent.scene.add(parent.meshBackGround);
+            parent.render(true);    // 强制重绘
         });
-        var material = new THREE.MeshBasicMaterial({map:texture});
-        var mesh = new THREE.Mesh(geometry,material);
-        mesh.position.set((x - this.xmin)/(this.xmax-this.xmin), (y - this.ymin)/(this.ymax-this.ymin), 1);
-        this.scene.add(mesh);
     }
+    // 设置目标图片
+    // 参数: 图片url, 图宽度, 图高度
     this.setTarget = function(pic_path, width, height) {
-       var geometry = new THREE.PlaneGeometry(0.3/(this.xmax-this.xmin), 0.15/(this.ymax-this.ymin));
-       var texture = THREE.ImageUtils.loadTexture(pic_path,null,function(t)
-        {
-            plot2d2.renderer.render(plot2d2.scene, plot2d2.camera);
+        var parent = this;
+        new THREE.TextureLoader().load(pic_path, function(texture) {
+            var geometry = new THREE.PlaneGeometry(width / (parent.xmax-parent.xmin), height/(parent.ymax-parent.ymin));
+            var material = new THREE.MeshBasicMaterial({map:texture});
+            material.transparent = true;    // 设置图片透明度
+            parent.meshTarget = new THREE.Mesh(geometry,material);
+            parent.meshTarget.position.set((0 - parent.xmin)/(parent.xmax-parent.xmin), (0 - parent.ymin)/(parent.ymax-parent.ymin), 3);
+            parent.scene.add(parent.meshTarget);
+            parent.render(true);    // 强制重绘
         });
-        var material = new THREE.MeshBasicMaterial({map:texture});
-        material.transparent = true;
-        var cone = new THREE.Mesh( geometry, material );
-        cone.rotateZ(0.5*Math.PI)   //旋转的角度
-        cone.position.set((0 - this.xmin)/(this.xmax-this.xmin), (0 - this.ymin)/(this.ymax-this.ymin), 3); // 位置    
-        this.scene.add(cone);
-        this.picCar=cone;
-
     }
     this.upadateObeject=function(pos,angle){
         if(this.picCar != undefined)
@@ -619,8 +620,8 @@ var RealtimePlot2D = function(domElement, data, interval) {
         }
     }
     // 渲染
-    this.render = function() {
-        if (this.dataIndex.length && this.update()) {
+    this.render = function(force) {
+        if (force || (this.dataIndex.length && this.update())) {
             this.renderer.render(this.scene, this.camera);
         }
     }
