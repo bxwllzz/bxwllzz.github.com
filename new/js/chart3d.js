@@ -585,28 +585,28 @@ var RealtimePlot2D = function(domElement, data, interval) {
         this.updateGrid();
         return false;
     }
-    this.Insertbackround = function(){
-        var geometry = new THREE.PlaneGeometry(2/(this.xmax-this.xmin), 1.5/(this.ymax-this.ymin));
-        var texture = THREE.ImageUtils.loadTexture("pic/1.jpg",null,function(t)
-         {
+    this.setBackround = function(pic_path, width, height, x, y) {
+        var geometry = new THREE.PlaneGeometry(width/(this.xmax-this.xmin), height/(this.ymax-this.ymin));
+        var texture = THREE.ImageUtils.loadTexture(pic_path,null,function(t)
+        {
             plot2d2.renderer.render(plot2d2.scene, plot2d2.camera);
         });
         var material = new THREE.MeshBasicMaterial({map:texture});
-        var mesh = new THREE.Mesh( geometry,material );
-        mesh.position.set((0 - this.xmin)/(this.xmax-this.xmin), (0 - this.ymin)/(this.ymax-this.ymin), 0);
+        var mesh = new THREE.Mesh(geometry,material);
+        mesh.position.set((x - this.xmin)/(this.xmax-this.xmin), (y - this.ymin)/(this.ymax-this.ymin), 1);
         this.scene.add(mesh);
     }
-    this.addopject=function(){
+    this.setTarget = function(pic_path, width, height) {
        var geometry = new THREE.PlaneGeometry(0.3/(this.xmax-this.xmin), 0.15/(this.ymax-this.ymin));
-       var texture = THREE.ImageUtils.loadTexture("pic/car-icon.png",null,function(t)
-         {
+       var texture = THREE.ImageUtils.loadTexture(pic_path,null,function(t)
+        {
             plot2d2.renderer.render(plot2d2.scene, plot2d2.camera);
         });
         var material = new THREE.MeshBasicMaterial({map:texture});
         material.transparent = true;
         var cone = new THREE.Mesh( geometry, material );
-        cone.rotateZ(Math.PI)   //构造旋转的角度
-        cone.position.set(0.5, 0.5, 0);    //构造距离    
+        cone.rotateZ(0.5*Math.PI)   //旋转的角度
+        cone.position.set((0 - this.xmin)/(this.xmax-this.xmin), (0 - this.ymin)/(this.ymax-this.ymin), 3); // 位置    
         this.scene.add(cone);
         this.picCar=cone;
 

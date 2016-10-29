@@ -591,8 +591,8 @@ $(document).ready(function(){
     //plot2d.addDataIndex(23, 0xFF9900);
     plot2d2 = new RealtimePlot2D($("#plot-container2"), deviceData);
     // plot2d2.addDataIndex([28, 29], 0xFF0000);
-    plot2d2.Insertbackround();
-    plot2d2.addopject();
+    plot2d2.setBackround("./pic/1.jpg", 2, 1, 0, 0);
+    plot2d2.setTarget("./pic/car-icon.png", 0.3, 0.15);
     plot2d2.addDataIndex([31, 32], 0xFF0000);
     // plot2d2.addDataIndex([34, 35], 0xFF9900);
 
