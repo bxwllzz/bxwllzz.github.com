@@ -492,8 +492,22 @@ var clickTime=0;
 $(document).ready(function(){
 
     // 当url中含有debug=1参数时, 显示class=debug的dom
+    //默认IP为192.168.123.63 
     if (getQueryString("debug") == "1") {
         $(".debug").show();
+    }
+    if(getQueryString("type") == "robot")
+    {
+        $(".robot").show();
+        $("#wsServer").val("192.168.123.63");
+    }
+    if(getQueryString("type") == "car")
+    {
+         $("#wsServer").val("192.168.123.15");
+    }
+    if(getQueryString('ip')!=null)
+    {
+        $("#wsServer").val(getQueryString('ip'));
     }
 
     $(function(argument) {

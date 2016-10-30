@@ -111,13 +111,19 @@ height: 200px;
     /* 默认颜色 */
 }
 [status=pending] {
-    background-color: orange;
+    background-color: #d9534f;
 }
 [status=connected] {
     background-color: #81F781;
 }
 [status=error] {
-    background-color: red;
+    background-color: #d9534f;
+}
+.gravity{
+    margin: 0 7px;
+}
+.robot{
+    display: none;
 }
 body
 {
