@@ -101,6 +101,10 @@ height: 200px;
 .padding {
     padding: 7px 0px;
 }
+/* 默认隐藏debug */
+.debug {
+    display: none;
+}
 body
 {
     font-family: "Microsoft YaHei"

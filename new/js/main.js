@@ -484,9 +484,9 @@ var plot2d;
 var clickTime=0;
 $(document).ready(function(){
 
-    // 当url中含有debug=1参数时, 隐藏class=debug的dom
-    if (getQueryString("debug") != "1") {
-        $(".debug").hide();
+    // 当url中含有debug=1参数时, 显示class=debug的dom
+    if (getQueryString("debug") == "1") {
+        $(".debug").show();
     }
 
     $("#debug").click(function(){
@@ -596,17 +596,22 @@ $(document).ready(function(){
     stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
     //document.body.appendChild( stats.dom );
     
-    // 强制设定路径图为正方形
-    $("#plot-container2").height($("#plot-container2").width());
+    // 强制设定路径图为边长不大于500px的正方形
+    if ($("#plot-container2").width() > 500) {
+        $("#plot-container2").width(500);
+        $("#plot-container2").height(500);
+    } else {
+        $("#plot-container2").height($("#plot-container2").width());
+    }
 
     plot2d = new RealtimePlot1D($("#plot-container"), deviceData, 20);
     //plot2d.addDataIndex(22, 0xFF0000);
     //plot2d.addDataIndex(31, 0x0000FF);
     //plot2d.addDataIndex(32, 0x00FF00);
     //plot2d.addDataIndex(23, 0xFF9900);
-    plot2d2 = new RealtimePlot2D($("#plot-container2"), deviceData, 0.5, true);
+    plot2d2 = new RealtimePlot2D($("#plot-container2"), deviceData, 0.5, true, -0.25, 1.75, -0.75);
     // plot2d2.addDataIndex([28, 29], 0xFF0000);
-    plot2d2.setBackround("./pic/1.jpg", 2, 2, 0, 0);
+    plot2d2.setBackround("./pic/1.jpg", 2, 2, 0.75, -0.75);
     plot2d2.setTarget("./pic/car-icon.png", 0.4, 0.3, 31, 32, 15);
     plot2d2.addDataIndex([31, 32], 0x00FF00);
     // plot2d2.addDataIndex([34, 35], 0xFF9900);
@@ -633,6 +638,13 @@ $(document).ready(function(){
     }
     $("#data10").click();
     $("#data11").click();
+
+    if (getQueryString("debug") != "1") {
+        // 根据debug隐藏坐标轴刻度
+        $(".xlabel").hide();
+        $(".ylabel").hide();
+    }
+
     
     setInterval(updateRemote, 200);
     requestAnimationFrame(pageRender);

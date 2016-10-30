@@ -344,7 +344,7 @@ var RealtimePlot1D = function(domElement, data, maxTime) {
 }
 
 // 当两个点的像素间距大于minInterval时,才绘制新点
-var RealtimePlot2D = function(domElement, data, interval, disableReGrid) {
+var RealtimePlot2D = function(domElement, data, interval, disableReGrid, xmin, xmax, ycenter) {
     if (data == null) {
         throw("RealtimePlot2D(domElement, data, minInterval) must define data");
     }
@@ -352,14 +352,17 @@ var RealtimePlot2D = function(domElement, data, interval, disableReGrid) {
     this.interval = interval == null ? 0.5 : interval;  // 默认两个点的最小像素间距为0.5
     this.disableReGrid = disableReGrid ? true : false;
     // 继承BasePlot2D, 默认绘制2x2的大小
+    this.xmin = xmin == null ? -1 : xmin;
+    this.xmax = xmax == null ? 1 : xmax;
+    ycenter = ycenter == null ? 0 : ycenter;
     if (this.disableReGrid) {
-        BasePlot2D.apply(this, [domElement, -1, 1, null, null, null, null, 0, 0, ]);
+        BasePlot2D.apply(this, [domElement, this.xmin, this.xmax, null, null, null, null, 0, 0, ]);
     } else {
-        BasePlot2D.apply(this, [domElement, -1, 1, ]);
+        BasePlot2D.apply(this, [domElement, this.xmin, this.xmax, ]);
     }
     // 保持横纵比为1:1
-    this.ymin = -(this.xmax - this.xmin) / 2 * this.canvas.y / this.canvas.x;
-    this.ymax = (this.xmax - this.xmin) / 2 * this.canvas.y / this.canvas.x;
+    this.ymin = ycenter - (this.xmax - this.xmin) / 2 * this.canvas.y / this.canvas.x;
+    this.ymax = ycenter + (this.xmax - this.xmin) / 2 * this.canvas.y / this.canvas.x;
     this.yInterval = this.xInterval * this.canvas.y / this.canvas.x;
     this.drawGrid("y");
     this.renderer.render(this.scene, this.camera);
