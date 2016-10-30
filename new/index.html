@@ -29,7 +29,10 @@
 		<span class="input-group-btn">
             <button type="button" class="btn btn-info" id="connect">连接</button> 
             <button type="button" class="btn btn-danger" id="disconnect" style="display: none">断开</button>
-			<button id="emergencyStop" onclick="emergencyStop()" class="btn btn-danger" style="background-color: red" disabled=true><img src="pic/emergency_stop.png" style="height:18px"/> 急停</button>
+			<button onclick="resetArmRetset()" class="btn btn-info">归0</button>
+			<button id="emergencyStop" onclick="emergencyStop()" class="btn btn-danger" style="background-color: red" disabled=true>
+				<img src="pic/emergency_stop.png" style="height:18px" class="car"/> 
+				急停</button>
         <span>
     </div>
     <div class="debug">

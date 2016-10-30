@@ -111,7 +111,7 @@ height: 200px;
     /* 默认颜色 */
 }
 [status=pending] {
-    background-color: #d9534f;
+    background-color: #ffd394;
 }
 [status=connected] {
     background-color: #81F781;
@@ -123,6 +123,9 @@ height: 200px;
     margin: 0 7px;
 }
 .robot{
+    display: none;
+}
+.car{
     display: none;
 }
 body

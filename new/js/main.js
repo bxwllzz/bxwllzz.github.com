@@ -217,6 +217,10 @@ function setRemote(k, v) {
         updateRemote();
     }
 }
+function resetArmRetset(){
+    var cmd = {runonce: "armreset"};
+    websocket.send(JSON.stringify(cmd));
+}
 function resetRemote() {
     console.log("复位中");
     $("#status").html("复位中");
@@ -493,17 +497,27 @@ $(document).ready(function(){
 
     // 当url中含有debug=1参数时, 显示class=debug的dom
     //默认IP为192.168.123.63 
+   
     if (getQueryString("debug") == "1") {
         $(".debug").show();
     }
-    if(getQueryString("type") == "robot")
+    if(getQueryString("type") != null)
     {
-        $(".robot").show();
-        $("#wsServer").val("192.168.123.63");
+        if(getQueryString("type") == "robot")
+        {
+            $(".robot").show();
+            $("#wsServer").val("192.168.123.63");
+        }
+        if(getQueryString("type") == "car")
+        {
+            $(".car").show();
+            $("#wsServer").val("192.168.123.15");
+        }
     }
-    if(getQueryString("type") == "car")
+    else
     {
-         $("#wsServer").val("192.168.123.15");
+        $(".car").show();   //默认是car
+        $("#wsServer").val("192.168.123.15");
     }
     if(getQueryString('ip')!=null)
     {
