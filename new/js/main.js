@@ -35,7 +35,7 @@ function wsOnOpen(evt) {
     clearWsTimeout();
     console.log("已连接");
     $("#status").html("已连接");
-    //初始化爪子的数组
+    $("#status").attr("status", "connected");
     setWsTimeout();
 }
 
@@ -106,6 +106,7 @@ function wsOnClose(evt) {
     clearWsTimeout();
     console.log("已断开");
     $("#status").html("已断开");
+    $("#status").attr("status", "not-connected");
     websocket = null;
     if (wsTryOpen) {
         wsOnOpening();
@@ -121,6 +122,7 @@ function wsOnOpening() {
     clearWsTimeout();
     console.log("连接中");
     $("#status").html("连接中");
+    $("#status").attr("status", "pending");
     websocket = new WebSocket("ws://" + $("#wsServer")[0].value); 
     websocket.onopen = wsOnOpen;
     websocket.onmessage = wsOnMessage;
@@ -132,6 +134,7 @@ function wsOnClosing() {
     clearWsTimeout();
     console.log("关闭中");
     $("#status").html("关闭中");
+    $("#status").attr("status", "pending");
     websocket.close();
     setWsTimeout();
 }
@@ -140,6 +143,7 @@ function wsOnOpenTimeout() {
     if (websocket != null && websocket.readyState == websocket.CONNECTING) {
         console.log("连接超时");
         $("#status").html("连接超时");
+        $("#status").attr("status", "error");
         wsOnClosing();
     }
 }
@@ -148,6 +152,7 @@ function wsOnNodataTimeout() {
     if (websocket != null && websocket.readyState == websocket.OPEN) {
         console.log("无数据超时");
         $("#status").html("无数据超时");
+        $("#status").attr("status", "error");
         wsOnClosing();
     }
 }
@@ -156,6 +161,7 @@ function wsOnCloseTimeout() {
     if (websocket != null && websocket.readyState == websocket.CLOSING) {
         console.log("关闭超时");
         $("#status").html("关闭超时");
+        $("#status").attr("status", "error");
         websocket = null;
         if (wsTryOpen) {
             wsOnOpening();
@@ -214,6 +220,7 @@ function setRemote(k, v) {
 function resetRemote() {
     console.log("复位中");
     $("#status").html("复位中");
+    $("#status").attr("status", "pending");
     clearWsTimeout();
     var cmd = {runonce: "reset"};
     websocket.send(JSON.stringify(cmd));
@@ -489,27 +496,6 @@ $(document).ready(function(){
         $(".debug").show();
     }
 
-    $("#debug").click(function(){
-        if(clickTime==0||clickTime==3)
-        {
-          
-            $("#message").css("display","block");
-            $("#plot-container").css("display","block");
-            $("#alldata").css("display","block");
-            if(clickTime==0)
-            {
-                plot2d = new RealtimePlot1D($("#plot-container"), deviceData, 20);
-            }
-             clickTime=1;
-        }
-        else
-        {
-            clickTime=3;
-            $("#message").css("display","none");
-            $("#plot-container").css("display","none");
-            $("#alldata").css("display","none");
-        }
-    });   
     $(function(argument) {
       $('#angleControl').bootstrapSwitch();
       $('#clawControl').bootstrapSwitch();
@@ -576,16 +562,18 @@ $(document).ready(function(){
         $("#openTimeout").prop('disabled', true);
         $("#closeTimeout").prop('disabled', true);
         $("#nodataTimeout").prop('disabled', true);
-        $("#connect").prop('disabled', true);
-        $("#disconnect").prop('disabled', false);
+        $("#connect").hide();
+        $("#disconnect").show();
+        $("#emergencyStop").prop("disabled", false);
         wsOnOpening();
         refreshInterval = setTimeout(dataRefreshHandler, 1);
     });
     $("#disconnect").click(function() {
         clearTimeout(refreshInterval);
         wsTryOpen = false;
-        $("#connect").prop('disabled', false);
-        $("#disconnect").prop('disabled', true);
+        $("#connect").show();
+        $("#disconnect").hide();
+        $("#emergencyStop").prop("disabled", true);
         wsOnClosing();
     });
     $(document).keydown(keyDownHandler);
@@ -596,20 +584,15 @@ $(document).ready(function(){
     stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
     //document.body.appendChild( stats.dom );
     
-    // 强制设定路径图为边长不大于500px的正方形
-    if ($("#plot-container2").width() > 500) {
-        $("#plot-container2").width(500);
-        $("#plot-container2").height(500);
-    } else {
-        $("#plot-container2").height($("#plot-container2").width());
-    }
+    // 强制设定路径图为边长不大于500px的正方形, 并居中
+    $("#plot-route").height($("#plot-route").width());
 
     plot2d = new RealtimePlot1D($("#plot-container"), deviceData, 20);
     //plot2d.addDataIndex(22, 0xFF0000);
     //plot2d.addDataIndex(31, 0x0000FF);
     //plot2d.addDataIndex(32, 0x00FF00);
     //plot2d.addDataIndex(23, 0xFF9900);
-    plot2d2 = new RealtimePlot2D($("#plot-container2"), deviceData, 0.5, true, -0.25, 1.75, -0.75);
+    plot2d2 = new RealtimePlot2D($("#plot-route"), deviceData, 0.5, true, -0.25, 1.75, -0.75);
     // plot2d2.addDataIndex([28, 29], 0xFF0000);
     plot2d2.setBackround("./pic/1.jpg", 2, 2, 0.75, -0.75);
     plot2d2.setTarget("./pic/car-icon.png", 0.4, 0.3, 31, 32, 15);

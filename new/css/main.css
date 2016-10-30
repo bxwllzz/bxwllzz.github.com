@@ -104,8 +104,23 @@ height: 200px;
 /* 默认隐藏debug */
 .debug {
     display: none;
+    background-color: #DDDDDD;
+}
+/* 连接状态颜色 */
+[status=not-connected] {
+    /* 默认颜色 */
+}
+[status=pending] {
+    background-color: orange;
+}
+[status=connected] {
+    background-color: #81F781;
+}
+[status=error] {
+    background-color: red;
 }
 body
 {
-    font-family: "Microsoft YaHei"
+    max-width: 500px; 
+    margin: 0px auto; 
 }
