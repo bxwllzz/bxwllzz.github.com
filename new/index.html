@@ -29,7 +29,7 @@
 		<span class="input-group-btn">
             <button type="button" class="btn btn-info" id="connect">连接</button> 
             <button type="button" class="btn btn-danger" id="disconnect" style="display: none">断开</button>
-			<button onclick="resetArmRetset()" class="btn btn-info">归0</button>
+			<button onclick="resetArmRetset()" class="btn btn-info robot">归0</button>
 			<button id="emergencyStop" onclick="emergencyStop()" class="btn btn-danger" style="background-color: red" disabled=true>
 				<img src="pic/emergency_stop.png" style="height:18px" class="car"/> 
 				急停</button>
@@ -64,13 +64,13 @@
 				<img src="pic/robot.png" />
 			</div>
 		</div>
-		<div class="panel panel-primary  pointCar postionCar">
+		<div class="panel panel-primary  pointCar postionCar car robot">
 			<div class="panel-heading padding">
 				<img src="pic/car.png" />
 			</div>
 		</div>
 
-		<div class="panel panel-info RobotArm">
+		<div class="panel panel-info RobotArm robot">
 			<div class="panel-heading ">机械臂控制</div>
 			<div id="oprater12">
 				<div class="Number">
@@ -96,7 +96,7 @@
 			</div>
 		</div>
 
-		<div class="panel panel-primary direction">
+		<div class="panel panel-primary direction car robot">
 			<div class="panel-heading ">小车控制</div>
 			<div id="oprater">
 				<span  class="divcss"><img src="pic/c-1.png" class="imgpic"/></span>

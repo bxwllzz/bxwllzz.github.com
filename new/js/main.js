@@ -302,7 +302,7 @@ function Deal(num)
          break;
           case 4:
             setRemote("speed", 0);
-            setRemote("speeddiff",targedSpeeddiffer);
+            setRemote("speeddiff",targedSpeeddiffer*1.5);
          break;
           case 5:
             setRemote("speed", 0);
@@ -310,11 +310,11 @@ function Deal(num)
          break;
           case 6:
             setRemote("speed", 0);
-            setRemote("speeddiff",-targedSpeeddiffer);
+            setRemote("speeddiff",-targedSpeeddiffer*1.5);
          break;
           case 7:
             setRemote("speed", -targedSpeed);
-            setRemote("speeddiff",targedSpeeddiffer);
+            setRemote("speeddiff",-targedSpeeddiffer);
          break;
           case 8:
             setRemote("speed", -targedSpeed);
@@ -322,7 +322,7 @@ function Deal(num)
          break;
           case 9:
             setRemote("speed", -targedSpeed);
-            setRemote("speeddiff",-targedSpeeddiffer);
+            setRemote("speeddiff",targedSpeeddiffer);
          break;
          default:
          break;
@@ -335,19 +335,19 @@ function Deal_ARM(num)
 }
 function keyDownHandler(event) {
     if (event.keyCode == 37) { // 左
-        setRemote("speeddiff", 0.4);
+        setRemote("speeddiff", targedSpeeddiffer);
         return false;
     } 
     if (event.keyCode == 39) { // 右
-        setRemote("speeddiff", -0.4);
+        setRemote("speeddiff", -targedSpeeddiffer);
         return false;
     } 
     if (event.keyCode == 38) { // 上
-        setRemote("speed", 0.3);
+        setRemote("speed", targedSpeed);
         return false;
     } 
     if (event.keyCode == 40) { // 下
-        setRemote("speed", -0.3);
+        setRemote("speed", -targedSpeed);
         return false;
     }
 }
@@ -459,11 +459,14 @@ function touchEnd_RobotArm()
 }
 function DisplaySet(type,objectF)
 {
-    if(type=="head")
+    if(mainType=="robot")
     {
+      if(type=="head")
+     {
         //hied head
-        $(".postionCar").fadeOut("slow");
-        $('.postionArm').fadeOut("slow");
+          $(".postionCar").fadeOut("slow");
+          $('.postionArm').fadeOut("slow");
+          $('.RobotArm').fadeOut("slow");
         //显示对于的
         if(objectF=="car")
             $('.direction').fadeIn();
@@ -478,6 +481,21 @@ function DisplaySet(type,objectF)
             $('.RobotArm').fadeOut("slow");
         $(".postionCar").fadeIn();
         $('.postionArm').fadeIn();
+        $('.direction').fadeOut("slow");
+    }
+    }
+    else
+    {
+        if(type=="head")
+        {
+             $('.direction').fadeIn();
+             $(".postionCar").fadeOut("slow");
+        }
+        else
+        {
+             $('.direction').fadeOut("slow");
+             $(".postionCar").fadeIn();
+        }
     }
 }
 
@@ -493,6 +511,7 @@ var plot;
 var plot2d2;
 var plot2d;
 var clickTime=0;
+var mainType;
 $(document).ready(function(){
 
     // 当url中含有debug=1参数时, 显示class=debug的dom
@@ -501,24 +520,26 @@ $(document).ready(function(){
     if (getQueryString("debug") == "1") {
         $(".debug").show();
     }
-    if(getQueryString("type") != null)
-    {
-        if(getQueryString("type") == "robot")
-        {
+
+     if(getQueryString("type") == "robot")
+     {
             $(".robot").show();
             $("#wsServer").val("192.168.123.63");
-        }
-        if(getQueryString("type") == "car")
-        {
+            mainType="robot";
+            $(".postionCar").hide();
+          //  $(".postionArm").hide();
+            $(".RobotArm").hide();
+      }
+      else
+     {
+            //默认为car
             $(".car").show();
+            $(".postionCar").hide();
             $("#wsServer").val("192.168.123.15");
-        }
-    }
-    else
-    {
-        $(".car").show();   //默认是car
-        $("#wsServer").val("192.168.123.15");
-    }
+            mainType="car";
+            targedSpeed=0.15;
+            targedSpeeddiffer=0.15;
+     }
     if(getQueryString('ip')!=null)
     {
         $("#wsServer").val(getQueryString('ip'));
