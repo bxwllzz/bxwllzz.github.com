@@ -128,6 +128,10 @@ height: 200px;
 .car{
     display: none;
 }
+.RobotArm .panel-heading img,.direction .panel-heading img{
+    width: 20px;
+        float: right;
+}
 body
 {
     max-width: 500px; 

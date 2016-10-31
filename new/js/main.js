@@ -466,12 +466,14 @@ function DisplaySet(type,objectF)
         //hied head
           $(".postionCar").fadeOut("slow");
           $('.postionArm').fadeOut("slow");
-          $('.RobotArm').fadeOut("slow");
         //显示对于的
         if(objectF=="car")
             $('.direction').fadeIn();
         else
+        {
+             $('.direction').fadeOut();
             $('.RobotArm').fadeIn();
+        }
     }
     else
     {
