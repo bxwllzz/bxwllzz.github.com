@@ -259,26 +259,27 @@ function CalumniateNum(id,x,y,unitx,unity,rowNum){
 var targedSpeed=0.1;
 var targedSpeeddiffer=0.1;
 //定义角度处理函数
+var orientationspeed = 0.01;
 function orientationHandler(event) {  
     var z = 5;
     if (event.beta < -z) {
         // 前进
-        var val = (-z - event.beta) * 0.02;
+        var val = (-z - event.beta) * orientationspeed;
         setRemote("speed", val.toFixed(2));
     } else if (event.beta > z) {
         // 后退
-        var val = (event.beta - z) * -0.02;
+        var val = (event.beta - z) * -orientationspeed;
         setRemote("speed", val.toFixed(2));
     } else if (event.beta < z && event.beta > -z) {
         setRemote("speed", 0);
     }
     if (event.gamma < -z) {
         // 逆时针旋转
-        var val = (-z - event.gamma) * 0.02;
+        var val = (-z - event.gamma) * orientationspeed;
         setRemote("speeddiff", val.toFixed(2));
     } else if (event.gamma > z) {
         // 顺时针旋转
-        var val = (event.gamma - z) * -0.02;
+        var val = (event.gamma - z) * -orientationspeed;
         setRemote("speeddiff", val.toFixed(2));
     } else if (event.gamma < z && event.gamma > -z) {
         setRemote("speeddiff", 0);
