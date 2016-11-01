@@ -259,7 +259,7 @@ function CalumniateNum(id,x,y,unitx,unity,rowNum){
 var targedSpeed=0.1;
 var targedSpeeddiffer=0.1;
 //定义角度处理函数
-var orientationspeed = 0.01;
+var orientationspeed = 0.015;
 function orientationHandler(event) {  
     var z = 5;
     if (event.beta < -z) {
