@@ -532,6 +532,8 @@ $(document).ready(function(){
             $(".postionCar").hide();
           //  $(".postionArm").hide();
             $(".RobotArm").hide();
+            targedSpeed=0.15;
+            targedSpeeddiffer=0.15;
       }
       else
      {
