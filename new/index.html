@@ -9,7 +9,18 @@
 
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/bootstrap-switch.min.css" rel="stylesheet">
+	<link href="css/bootstrap-slider.min.css" rel="stylesheet">
+	
 	<link href="css/main.css" rel="stylesheet">
+	<link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon-precomposed" href="favicon.ico"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <link rel="apple-touch-startup-image" href="startup.png" media="screen"/>
+	<meta name="mobile-web-app-capable" content="yes">  
+	<!--设置谷歌全屏幕-->
 </head>
 
 <body style=" -webkit-user-select: none;">
@@ -33,6 +44,7 @@
 			<button id="emergencyStop" onclick="emergencyStop()" class="btn btn-danger" style="background-color: red" disabled=true>
 				<img src="pic/emergency_stop.png" style="height:18px" class="car"/> 
 				急停</button>
+					
         <span>
     </div>
     <div class="debug">
@@ -70,7 +82,7 @@
 			</div>
 		</div>
 
-		<div class="panel panel-info RobotArm robot">
+		<div class="panel panel-primary RobotArm robot">
 			<div class="panel-heading ">
 				机械臂控制
 				<img src="pic/close.png"/>
@@ -99,6 +111,14 @@
 			</div>
 		</div>
 
+		<div class="panel panel-primary speedtext car robot">
+			<div class="panel-heading ">
+				车速
+			</div>
+			<div class="center1">
+			<input id="ex5" type="text" data-slider-min="0.05" data-slider-max="0.3" data-slider-step="0.01" data-slider-value="0.15" data-slider-orientation="vertical"/>
+			</div>
+		</div>
 		<div class="panel panel-primary direction car robot">
 			<div class="panel-heading ">
 				小车控制
@@ -115,6 +135,7 @@
 				<span  class="divcss"><img src="pic/c-8.png" class="imgpic"/></span>
 				<span  class="divcss"><img src="pic/c-9.png" class="imgpic"/></span>
 			</div>
+		
 		</div>
 
 		<div class="debug">
@@ -211,8 +232,7 @@
 		</div>
 		</div>
 
-
-		<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+		<script src="js/jquery.min.js"></script>
 		<script src="js/main.js"></script>
 		<script src="js/chart3d.js"></script>
 		<script src="js/bootstrap.min.js"></script>
@@ -223,6 +243,6 @@
 		<script src="js/data.js"></script>
 		<script src="js/chart3d.js"></script>
 		<script src="js/bootstrap-switch.min.js"></script>
+		<script src="js/bootstrap-slider.js"></script>
 </body>
-
 </html>

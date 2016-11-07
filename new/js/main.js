@@ -407,7 +407,7 @@ function touchmoving_RobotArm(event){
     }
 }
 function touchStart(event){
-    event.preventDefault(); //取消默认事件
+    
     if(event.type=="mousedown")
     {
        var x=event.pageX;
@@ -460,46 +460,19 @@ function touchEnd_RobotArm()
 }
 function DisplaySet(type,objectF)
 {
-    if(mainType=="robot")
-    {
-      if(type=="head")
-     {
-        //hied head
-          $(".postionCar").fadeOut("slow");
-          $('.postionArm').fadeOut("slow");
-        //显示对于的
+
         if(objectF=="car")
-            $('.direction').fadeIn();
-        else
         {
-             $('.direction').fadeOut();
-            $('.RobotArm').fadeIn();
-        }
-    }
-    else
-    {
-        if(objectF=="car")
-            $('.direction').fadeOut("slow");
-        else
-            $('.RobotArm').fadeOut("slow");
-        $(".postionCar").fadeIn();
-        $('.postionArm').fadeIn();
-        $('.direction').fadeOut("slow");
-    }
-    }
-    else
-    {
-        if(type=="head")
-        {
-             $('.direction').fadeIn();
-             $(".postionCar").fadeOut("slow");
+             $(".postionCar").fadeToggle("slow");
+             $(".direction").fadeToggle("slow");
+              $(".speedtext").fadeToggle("slow");
         }
         else
         {
-             $('.direction').fadeOut("slow");
-             $(".postionCar").fadeIn();
+             $(".postionArm").fadeToggle("slow");
+             $(".RobotArm").fadeToggle("slow");
         }
-    }
+    
 }
 
 // 获取url参数
@@ -530,8 +503,10 @@ $(document).ready(function(){
             $("#wsServer").val("192.168.123.63");
             mainType="robot";
             $(".postionCar").hide();
-          //  $(".postionArm").hide();
-            $(".RobotArm").hide();
+            $(".postionArm").hide();
+          //  $(".RobotArm").hide()
+           $("link[rel='shortcut icon']").attr("href","favicon2.ico");
+           $("link[rel=icon]").attr("href","favicon2.ico");
             targedSpeed=0.15;
             targedSpeeddiffer=0.15;
       }
@@ -549,6 +524,14 @@ $(document).ready(function(){
     {
         $("#wsServer").val(getQueryString('ip'));
     }
+    
+   var slider =  $("#ex5").slider({
+	reversed : true
+    });
+    slider.on("slide", function(slideEvt) {
+        targedSpeed=slideEvt.value;
+        targedSpeeddiffer=slideEvt.value;
+    });
 
     $(function(argument) {
       $('#angleControl').bootstrapSwitch();
@@ -648,7 +631,14 @@ $(document).ready(function(){
     //plot2d.addDataIndex(23, 0xFF9900);
     plot2d2 = new RealtimePlot2D($("#plot-route"), deviceData, 0.5, true, -0.25, 1.75, -0.75);
     // plot2d2.addDataIndex([28, 29], 0xFF0000);
-    plot2d2.setBackround("./pic/1.jpg", 2, 2, 0.75, -0.75);
+    if(mainType=="robot")
+    {
+        plot2d2.setBackround("./pic/2.jpg", 2, 2, 0.75, -0.75);
+    }
+    else
+    {
+         plot2d2.setBackround("./pic/1.jpg", 2, 2, 0.75, -0.75);
+    }
     plot2d2.setTarget("./pic/car-icon.png", 0.4, 0.3, 31, 32, 15);
     plot2d2.addDataIndex([31, 32], 0x00FF00);
     // plot2d2.addDataIndex([34, 35], 0xFF9900);
