@@ -500,7 +500,7 @@ $(document).ready(function(){
      if(getQueryString("type") == "robot")
      {
             $(".robot").show();
-            $("#wsServer").val("192.168.123.63");
+            $("#wsServer").val("192.168.123.31");
             mainType="robot";
             $(".postionCar").hide();
             $(".postionArm").hide();
@@ -515,7 +515,7 @@ $(document).ready(function(){
             //默认为car
             $(".car").show();
             $(".postionCar").hide();
-            $("#wsServer").val("192.168.123.15");
+            $("#wsServer").val("192.168.123.31");
             mainType="car";
             targedSpeed=0.15;
             targedSpeeddiffer=0.15;
